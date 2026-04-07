@@ -18,6 +18,7 @@ end
 
 function love.update(dt)
     myPlayer:playerMovement()
+    myPlayer:checkCupcakes(cupcakeIndex)
 end
 
 function love.keypressed(key)

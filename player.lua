@@ -8,7 +8,10 @@ function Player.new(x, y, img)
     instance.img = img
     instance.width = img:getWidth()
     instance.height = img:getHeight()
-    instance.type = "Cupcake"
+    instance.speed = 1
+    instance.x_velocity = 0
+    instance.y_velocity = 0
+    instance.type = "Player"
     return instance
 end
 
@@ -65,9 +68,27 @@ function Player:playerMovement()
     end
 end
 
-function Player:checkCollisions(cupcakeList)
+function Player:baseCollisionCheck(x, y, width, height)
+    -- Player boundaries
+    local pLeft   = self.x - (self.width / 2)
+    local pRight  = self.x + (self.width / 2)
+    local pTop    = self.y - (self.height / 2)
+    local pBottom = self.y + (self.height / 2)
+    -- Object boundaries
+    local cLeft   = x - (width / 2)
+    local cRight  = x + (width / 2)
+    local cTop    = y - (height / 2)
+    local cBottom = y + (height / 2)
+    -- If any are true then the object and plaer aren't touching
+    return pLeft < cRight and
+           pRight > cLeft and
+           pTop < cBottom and
+           pBottom > cTop
+end
+
+function Player:checkCupcakes(cupcakeList)
     for i = #cupcakeList, 1, -1 do
-        if((self.x + self.width) > cupcakeList[i].x --[[Player !right of cupcake]] and self.x < (cupcakeList[i].x + cupcakeList[i].width)) then
+        if(self:baseCollisionCheck(cupcakeList[i].x, cupcakeList[i].y, cupcakeList[i].width, cupcakeList[i].height) == true) then
             table.remove(cupcakeList, i)
         end
     end
