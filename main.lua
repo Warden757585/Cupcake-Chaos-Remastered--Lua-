@@ -15,7 +15,7 @@ function love.load()
 end
 
 function love.update(dt)
-    
+    -- Add esc closes window!
 end
 
 function love.draw()
