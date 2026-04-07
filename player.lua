@@ -8,6 +8,7 @@ function Player.new(x, y, img)
     instance.img = img
     instance.width = img:getWidth()
     instance.height = img:getHeight()
+    instance.type = "Cupcake"
     return instance
 end
 
@@ -24,10 +25,12 @@ function Player:getHeight()
 end
 
 
-local speed = 1
-local x_velocity = 0
-local y_velocity = 0
+
 function Player:playerMovement()
+    local speed = 1
+    local x_velocity = 0
+    local y_velocity = 0
+
     -- When keys pressed update the velocity
     if love.keyboard.isDown('w', 'up') then
         y_velocity = y_velocity - (1 * (speed / 1.5))
@@ -60,6 +63,14 @@ function Player:playerMovement()
     if (y_velocity < 0.5 and y_velocity > -0.5) then
     
         y_velocity = 0;
+    end
+end
+
+function Player:checkCollisions(cupcakeList)
+    for i = #cupcakeList, 1, -1 do
+        if((self.x + self.width) > cupcakeList[i].x --[[Player !right of cupcake]] and self.x < (cupcakeList[i].x + cupcakeList[i].width)) then
+            table.remove(cupcakeList, i)
+        end
     end
 end
 
