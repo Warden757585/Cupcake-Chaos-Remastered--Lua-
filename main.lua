@@ -1,6 +1,6 @@
 local Cupcake = require("Cupcake")
 local myCupcake
---wut i dis
+
 function love.load()
     -- Set the screen to fullscreen:
     love.window.setFullscreen(true)
