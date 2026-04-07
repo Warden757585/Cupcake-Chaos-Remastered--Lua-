@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Current Lua File",
+            "type": "lua",
+            "request": "launch",
+            "program": "${file}",
+            "stopOnEntry": false,
+            "arg": []
+        },
+        {
+            "name": "Run main.lua",
+            "type": "lua",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.lua",
+            "stopOnEntry": false,
+            "arg": []
+        }
+    ]
+}
