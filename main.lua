@@ -15,7 +15,7 @@ function love.load()
 end
 
 function love.update(dt)
-    myPlayer:playerMovement(dt)
+    myPlayer:playerMovement()
     function love.keypressed(key)
 	if key == "escape" then
 		love.window.close()

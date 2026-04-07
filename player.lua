@@ -24,19 +24,42 @@ function Player:getHeight()
 end
 
 
-local speed = 3.5
-function Player:playerMovement(dt)
+local speed = 1
+local x_velocity = 0
+local y_velocity = 0
+function Player:playerMovement()
+    -- When keys pressed update the velocity
     if love.keyboard.isDown('w', 'up') then
-        self.y = self.y - speed
+        y_velocity = y_velocity - (1 * (speed / 1.5))
     end
+
     if love.keyboard.isDown('s', 'down') then
-        self.y = self.y + speed
+        y_velocity = y_velocity + (1 * (speed / 1.5))
     end
+
     if love.keyboard.isDown('a', 'left') then
-        self.x = self.x - speed
+        x_velocity = x_velocity - (1 * (speed / 1.5))
     end
+
     if love.keyboard.isDown('d', 'right') then
-        self.x = self.x + speed
+        x_velocity = x_velocity + (1 * (speed / 1.5))
+    end
+
+    -- Update the position based on the velocity
+    self.x = self.x + x_velocity
+    self.y = self.y + y_velocity
+
+    -- Apply damping to slow the player
+    x_velocity = x_velocity * 0.8
+    y_velocity = y_velocity * 0.8
+    -- If the velocity is an insignificant amount then just set it to 0 
+    if (x_velocity < 0.5 and x_velocity > -0.5) then
+    
+        x_velocity = 0;
+    end
+    if (y_velocity < 0.5 and y_velocity > -0.5) then
+    
+        y_velocity = 0;
     end
 end
 
