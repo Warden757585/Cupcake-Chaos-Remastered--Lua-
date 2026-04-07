@@ -26,11 +26,10 @@ end
 
 
 
+local speed = 1
+local x_velocity = 0
+local y_velocity = 0
 function Player:playerMovement()
-    local speed = 1
-    local x_velocity = 0
-    local y_velocity = 0
-
     -- When keys pressed update the velocity
     if love.keyboard.isDown('w', 'up') then
         y_velocity = y_velocity - (1 * (speed / 1.5))

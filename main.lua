@@ -5,7 +5,7 @@ local cupcakeIndex = {}
 
 function love.load()
     -- Set the window initial size and vsync
-    love.window.setMode(800, 600, {vsync = 1})
+    --love.window.setMode(800, 600, {vsync = 1})
     -- Set the screen to fullscreen
     love.window.setFullscreen(true)
     -- Load all images
