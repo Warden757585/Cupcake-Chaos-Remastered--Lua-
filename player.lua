@@ -50,8 +50,8 @@ function Player:playerMovement()
     self.y = self.y + y_velocity
 
     -- Apply damping to slow the player
-    x_velocity = x_velocity * 0.8
-    y_velocity = y_velocity * 0.8
+    x_velocity = x_velocity * 0.95
+    y_velocity = y_velocity * 0.95
     -- If the velocity is an insignificant amount then just set it to 0 
     if (x_velocity < 0.5 and x_velocity > -0.5) then
     

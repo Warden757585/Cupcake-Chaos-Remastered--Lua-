@@ -8,6 +8,7 @@ function Cupcake.new(x, y, img)
     instance.img = img
     instance.width = img:getWidth()
     instance.height = img:getHeight()
+    instance.type = "Cupcake"
     return instance
 end
 
