@@ -24,11 +24,19 @@ function Player:getHeight()
 end
 
 
+local speed = 3.5
 function Player:playerMovement(dt)
-    local speed = 1
     if love.keyboard.isDown('w', 'up') then
-        speed = speed + dt
         self.y = self.y - speed
+    end
+    if love.keyboard.isDown('s', 'down') then
+        self.y = self.y + speed
+    end
+    if love.keyboard.isDown('a', 'left') then
+        self.x = self.x - speed
+    end
+    if love.keyboard.isDown('d', 'right') then
+        self.x = self.x + speed
     end
 end
 

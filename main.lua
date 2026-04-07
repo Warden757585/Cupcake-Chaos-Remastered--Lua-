@@ -16,7 +16,11 @@ end
 
 function love.update(dt)
     myPlayer:playerMovement(dt)
-    -- Add esc closes window!
+    function love.keypressed(key)
+	if key == "escape" then
+		love.window.close()
+	end
+end
 end
 
 function love.draw()
