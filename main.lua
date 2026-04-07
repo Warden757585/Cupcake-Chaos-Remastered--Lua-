@@ -15,6 +15,7 @@ function love.load()
 end
 
 function love.update(dt)
+    myPlayer:playerMovement(dt)
     -- Add esc closes window!
 end
 
