@@ -10,7 +10,7 @@ function love.load()
     love.window.setFullscreen(true)
     -- Load all images
     local img_1 = love.graphics.newImage("Assets/Default Textures/cupcwake.png")
-    local img_2 = love.graphics.newImage("Assets/Default Textures/porple guy.png.png")
+    local img_2 = love.graphics.newImage("Assets/Default Textures/porple guy.png")
     -- Add the cupcake(s) to the list of cupcakes index
     table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1))
     myPlayer = Player.new(64, 64, img_2)
