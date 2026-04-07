@@ -13,8 +13,6 @@ end
 
 function Cupcake:draw()
     love.graphics.draw(self.img, self.x - (self.width / 2), self.y - (self.height / 2))
-    -- Print dimensions near the cupcake
-    love.graphics.print(self.width .. " x " .. self.height, self.x, self.y - 20)
 end
 
 return Cupcake
