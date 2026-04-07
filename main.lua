@@ -14,6 +14,10 @@ function love.load()
     myPlayer = Player.new(64, 64, img_2)
 end
 
+function love.update(dt)
+    
+end
+
 function love.draw()
     myCupcake:draw()
     myPlayer:draw()
