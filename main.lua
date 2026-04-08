@@ -8,13 +8,11 @@ local doDebug = false
 local doKeyDebug = false
 
 function love.load()
-    -- Set the window initial size and vsync
-    --love.window.setMode(800, 600, {vsync = 1})
     -- Set the screen to fullscreen
     love.window.setFullscreen(true)
     -- Load all images
-    local img_1 = love.graphics.newImage("Assets/Default Textures/cupcwake.png")
-    local img_2 = love.graphics.newImage("Assets/Default Textures/porple guy.png")
+    local img_1 = love.graphics.newImage("Assets/Textures/Default Textures/cupcwake.png")
+    local img_2 = love.graphics.newImage("Assets/Textures/Default Textures/porple guy.png")
     -- Add the cupcake(s) to the list of cupcakes index
     table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed)) -- Cupcake 1
     table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed)) -- Cupcake 2
@@ -53,7 +51,7 @@ function love.draw()
         cupcake:draw()
     end
     myPlayer:draw()
-
+    love.graphics.print("Score: " ..myPlayer.score.. " ", 0, love.graphics.getHeight() - 20)
 
     --If debugging is enables then print extra info to the screen
     if (doDebug) then

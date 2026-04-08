@@ -7,6 +7,7 @@ function Player.new(x, y, img, seed)
     instance.y = y
     instance.img = img
     instance.seed = seed
+    instance.score = 0
     instance.width = img:getWidth()
     instance.height = img:getHeight()
     instance.speed = 1
@@ -22,24 +23,23 @@ end
 
 
 function Player:playerMovement()
-    -- Declare all local variables
-    local speed = 1
-
+    -- Re-adjust the speed variable based on the score
+    self.speed = 1 + (self.score * 0.025)
     -- When keys pressed update the velocity
     if love.keyboard.isDown('w', 'up') then
-        self.y_velocity = self.y_velocity - (1 * (speed / 1.5))
+        self.y_velocity = self.y_velocity - (1 * (self.speed / 1.5))
     end
 
     if love.keyboard.isDown('s', 'down') then
-        self.y_velocity = self.y_velocity + (1 * (speed / 1.5))
+        self.y_velocity = self.y_velocity + (1 * (self.speed / 1.5))
     end
 
     if love.keyboard.isDown('a', 'left') then
-        self.x_velocity = self.x_velocity - (1 * (speed / 1.5))
+        self.x_velocity = self.x_velocity - (1 * (self.speed / 1.5))
     end
 
     if love.keyboard.isDown('d', 'right') then
-        self.x_velocity = self.x_velocity + (1 * (speed / 1.5))
+        self.x_velocity = self.x_velocity + (1 * (self.speed / 1.5))
     end
 
     -- Update the position based on the velocity
@@ -47,8 +47,8 @@ function Player:playerMovement()
     self.y = self.y + self.y_velocity
 
     -- Apply damping to slow the player
-    self.x_velocity = self.x_velocity * 0.95
-    self.y_velocity = self.y_velocity * 0.95
+    self.x_velocity = self.x_velocity * 0.9
+    self.y_velocity = self.y_velocity * 0.9
     -- If the velocity is an insignificant amount then just set it to 0 
     if (self.x_velocity < 0.5 and self.x_velocity > -0.5) then
     
@@ -81,6 +81,7 @@ function Player:checkCupcakes(cupcakeList)
     for i = #cupcakeList, 1, -1 do
         if(self:baseCollisionCheck(cupcakeList[i].x, cupcakeList[i].y, cupcakeList[i].width, cupcakeList[i].height) == true) then
             cupcakeList[i]:rePosition()
+            self.score = self.score + 1
         end
     end
 end
