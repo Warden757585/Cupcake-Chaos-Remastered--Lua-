@@ -51,7 +51,7 @@ function love.draw()
         cupcake:draw()
     end
     myPlayer:draw()
-    love.graphics.print("Score: " ..myPlayer.score.. " ", 0, love.graphics.getHeight() - 20)
+    love.graphics.print("Score: " ..myPlayer.score.. " Speed: " ..myPlayer.speed , 0, love.graphics.getHeight() - 20)
 
     --If debugging is enables then print extra info to the screen
     if (doDebug) then
