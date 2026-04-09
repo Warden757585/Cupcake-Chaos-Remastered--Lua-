@@ -7,7 +7,6 @@ function Player.new(x, y, img, seed, scoreSound)
     instance.y = y
     instance.img = img
     instance.seed = seed
-    instance.scoreSound = scoreSound
     instance.score = 0
     instance.width = img:getWidth()
     instance.height = img:getHeight()
@@ -85,7 +84,6 @@ function Player:checkCupcakes(cupcakeList)
         if(self:baseCollisionCheck(cupcakeList[i].x, cupcakeList[i].y, cupcakeList[i].width, cupcakeList[i].height) == true) then
             cupcakeList[i]:rePosition()
             self.score = self.score + 1
-            love.audio.play(self.scoreSound)
         end
     end
 end

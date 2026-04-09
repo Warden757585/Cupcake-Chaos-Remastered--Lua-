@@ -21,9 +21,9 @@ function love.load()
     local img_1 = love.graphics.newImage("Assets/Textures/Default Textures/cupcwake.png")
     local img_2 = love.graphics.newImage("Assets/Textures/Default Textures/porple guy.png")
     -- Add the cupcake(s) to the list of cupcakes index
-    table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed)) -- Cupcake 1
-    table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed)) -- Cupcake 2
-    myPlayer = Player.new(64, 64, img_2, seed, scoreSound)
+    table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed, scoreSound)) -- Cupcake 1
+    table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed, scoreSound)) -- Cupcake 2
+    myPlayer = Player.new(64, 64, img_2, seed)
     -- Assign each cupcake its own individual seed so that they do not re-position to the same coordinates
     -- Changing the game's seed still affects each cupcake
     for i, cupcake in ipairs(cupcakeIndex) do
