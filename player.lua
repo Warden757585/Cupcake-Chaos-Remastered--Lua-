@@ -1,12 +1,13 @@
 local Player = {}
 Player.__index = Player
 
-function Player.new(x, y, img, seed)
+function Player.new(x, y, img, seed, scoreSound)
     local instance = setmetatable({}, Player)
     instance.x = x
     instance.y = y
     instance.img = img
     instance.seed = seed
+    instance.scoreSound = scoreSound
     instance.score = 0
     instance.width = img:getWidth()
     instance.height = img:getHeight()
@@ -23,8 +24,10 @@ end
 
 
 function Player:playerMovement()
-    -- Re-adjust the speed variable based on the score
-    self.speed = 1 + (self.score * 0.025)
+    -- Re-adjust the speed variable based on the score as long as the speed is below 3 or else it gets too fast
+    if(self.speed < 3) then
+        self.speed = 1 + (self.score * 0.025)
+    end
     -- When keys pressed update the velocity
     if love.keyboard.isDown('w', 'up') then
         self.y_velocity = self.y_velocity - (1 * (self.speed / 1.5))
@@ -82,6 +85,7 @@ function Player:checkCupcakes(cupcakeList)
         if(self:baseCollisionCheck(cupcakeList[i].x, cupcakeList[i].y, cupcakeList[i].width, cupcakeList[i].height) == true) then
             cupcakeList[i]:rePosition()
             self.score = self.score + 1
+            love.audio.play(self.scoreSound)
         end
     end
 end

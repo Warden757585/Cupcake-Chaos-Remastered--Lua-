@@ -2,22 +2,30 @@ local Cupcake = require("Cupcake")
 local Player = require("Player")
 local myPlayer
 local cupcakeIndex = {}
-local seed = 5
+local seed = 1
+local mainFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
+
+-- Audio variables
+local scoreSound = love.audio.newSource("Assets/Audio/Legacy Audio/score.wav", "static")
 -- Debug variables:
 local doDebug = false
 local doKeyDebug = false
 
+
 function love.load()
-    -- Set the screen to fullscreen
+    -- Set the screen to fullscreen 
     love.window.setFullscreen(true)
+    -- Set the current font to mainFont
+    love.graphics.setFont(mainFont)
     -- Load all images
     local img_1 = love.graphics.newImage("Assets/Textures/Default Textures/cupcwake.png")
     local img_2 = love.graphics.newImage("Assets/Textures/Default Textures/porple guy.png")
     -- Add the cupcake(s) to the list of cupcakes index
     table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed)) -- Cupcake 1
     table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed)) -- Cupcake 2
-    myPlayer = Player.new(64, 64, img_2, seed)
-
+    myPlayer = Player.new(64, 64, img_2, seed, scoreSound)
+    -- Assign each cupcake its own individual seed so that they do not re-position to the same coordinates
+    -- Changing the game's seed still affects each cupcake
     for i, cupcake in ipairs(cupcakeIndex) do
         cupcakeIndex[i].seed = cupcakeIndex[i].seed + i * 100200300
     end
@@ -51,12 +59,12 @@ function love.draw()
         cupcake:draw()
     end
     myPlayer:draw()
-    love.graphics.print("Score: " ..myPlayer.score.. " Speed: " ..myPlayer.speed , 0, love.graphics.getHeight() - 20)
+    love.graphics.print("Score: " ..myPlayer.score.. " Speed: " ..myPlayer.speed , 0, 5)
 
     --If debugging is enables then print extra info to the screen
     if (doDebug) then
         for i, cupcake in ipairs(cupcakeIndex) do
-            love.graphics.print("Cupcake " ..i.. " position: " ..cupcakeIndex[i].x.. ", " ..cupcakeIndex[1].y.. " !", 0, 10 * i)
+            love.graphics.print("Cupcake " ..i.. " position: " ..cupcakeIndex[i].x.. ", " ..cupcakeIndex[i].y.. " !", 0, (love.graphics.getHeight() - 300) + 30 * i)
         end
     end
 end
