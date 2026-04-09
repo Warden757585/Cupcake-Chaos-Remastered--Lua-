@@ -1,70 +1,59 @@
-local Cupcake = require("Cupcake")
-local Player = require("Player")
-local myPlayer
-local cupcakeIndex = {}
-local seed = 1
-local mainFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
+local game = require("Scenes.game")
+local menu = require("Scenes.menu")
 
--- Audio variables
-local scoreSound = love.audio.newSource("Assets/Audio/Legacy Audio/score.wav", "static")
--- Debug variables:
-local doDebug = false
-local doKeyDebug = false
-
+local scene = "menu"
+local nextScene = scene
 
 function love.load()
     -- Set the screen to fullscreen 
     love.window.setFullscreen(true)
-    -- Set the current font to mainFont
-    love.graphics.setFont(mainFont)
-    -- Load all images
-    local img_1 = love.graphics.newImage("Assets/Textures/Default Textures/cupcwake.png")
-    local img_2 = love.graphics.newImage("Assets/Textures/Default Textures/porple guy.png")
-    -- Add the cupcake(s) to the list of cupcakes index
-    table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed, scoreSound)) -- Cupcake 1
-    table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed, scoreSound)) -- Cupcake 2
-    myPlayer = Player.new(64, 64, img_2, seed)
-    -- Assign each cupcake its own individual seed so that they do not re-position to the same coordinates
-    -- Changing the game's seed still affects each cupcake
-    for i, cupcake in ipairs(cupcakeIndex) do
-        cupcakeIndex[i].seed = cupcakeIndex[i].seed + i * 100200300
+    if scene == "game" then
+        game.load()
+    end
+    if scene == "menu" then
+        menu.load()
     end
 end
 
 function love.update(dt)
-    myPlayer:playerMovement()
-    myPlayer:checkCupcakes(cupcakeIndex)
-end
+    if scene == "game" then
+        game.update(dt)
+    end
+    if scene == "menu" then
+        nextScene = menu.update(dt)
+    end
 
-function love.keypressed(key)
-	if key == "escape" then
-		love.window.close()
-	end
-    if key == "f3" then
-        doDebug = not doDebug
-    end
-    if key == "f2" then
-        doKeyDebug = not doKeyDebug
-    end
-    if(doKeyDebug) then
-        print(key)        
+    --Check if the current scene is equal to the next scene
+    if scene ~= nextScene then
+        if nextScene == "menu" then
+            menu.load()
+            game.unload()
+            scene = nextScene
+        end
+        if nextScene == "game" then
+            game.load()
+            scene = nextScene
+        end
     end
 end
 
 function love.draw()
-    -- Clear the screen for drawing
-    love.graphics.clear()
-    -- Draw the cupcake and player
-    for i, cupcake in ipairs(cupcakeIndex) do
-        cupcake:draw()
+    if scene == "game" then
+        game.draw()
     end
-    myPlayer:draw()
-    love.graphics.print("Score: " ..myPlayer.score.. " Speed: " ..myPlayer.speed , 0, 5)
+    if scene == "menu" then
+        menu.draw()
+    end
+end
 
-    --If debugging is enables then print extra info to the screen
-    if (doDebug) then
-        for i, cupcake in ipairs(cupcakeIndex) do
-            love.graphics.print("Cupcake " ..i.. " position: " ..cupcakeIndex[i].x.. ", " ..cupcakeIndex[i].y.. " !", 0, (love.graphics.getHeight() - 300) + 30 * i)
+function love.keypressed(key)
+    if scene == "game" then
+        game.keypressed(key)
+        if game.keypressed(key) == "menu" then
+            nextScene = "menu"
         end
+    end
+    if scene == "menu" then
+        menu.keypressed(key)
     end
 end
