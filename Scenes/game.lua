@@ -10,6 +10,7 @@ local cupcakeIndex = {}
 local seed = 1
 -- Font Variable(s):
 local mainFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
+local titleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 54, "normal", love.graphics.getDPIScale())
 -- Audio variable(s):
 local scoreSound = love.audio.newSource("Assets/Audio/Legacy Audio/score.wav", "static")
 -- Debug variable(s):
@@ -27,7 +28,7 @@ function game.load()
     table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed, scoreSound)) -- Cupcake 1
     table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed, scoreSound)) -- Cupcake 2
     -- Set the timer to have our desired duration. Then we st it running
-    myTimer = Timer.new(30)
+    myTimer = Timer.new(3)
     myTimer:startCounting()
     -- Declare our player
     myPlayer = Player.new(64, 64, img_2, seed)
@@ -68,6 +69,9 @@ function game.draw()
         cupcake:draw()
     end
     myPlayer:draw()
+    if love.graphics.getFont() == titleFont then
+        love.graphics.setFont(mainFont)
+    end
     love.graphics.print("Score: " ..myPlayer.score.. " Speed: " ..myPlayer.speed.. " Time Used: " ..myTimer:getTime(), 0, 5)
 
     --If debugging is enables then print extra info to the screen
@@ -78,7 +82,10 @@ function game.draw()
     end
     -- When 1 tick of our 30 second timer is up then end the game.
     if myTimer.ticksPassed == 1 then
-        love.graphics.print("!GAME OVER! Final Score: " ..myPlayer.score , (love.graphics.getWidth() / 2) - (mainFont:getWidth("!GAME OVER! Final Score: " ..myPlayer.score) / 2), 100)
+        if love.graphics.getFont() == mainFont then
+            love.graphics.setFont(titleFont)
+        end
+        love.graphics.print("!GAME OVER! Final Score: " ..myPlayer.score , (love.graphics.getWidth() / 2) - (titleFont:getWidth("!GAME OVER! Final Score: " ..myPlayer.score) / 2), 100)
         myTimer:stopCounting()
         game.unload()
     end
