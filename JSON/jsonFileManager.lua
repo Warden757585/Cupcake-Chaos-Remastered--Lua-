@@ -1,7 +1,7 @@
 local jsonFileManager = {}
 jsonFileManager.__index = jsonFileManager
 
-local json = require "json"
+local json = require("JSON.jsonStorage")
 
 function jsonFileManager.new(filename)
     local instance = setmetatable({}, jsonFileManager)

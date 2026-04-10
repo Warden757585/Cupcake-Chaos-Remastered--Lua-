@@ -28,7 +28,7 @@ function game.load()
     table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed, scoreSound)) -- Cupcake 1
     table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed, scoreSound)) -- Cupcake 2
     -- Set the timer to have our desired duration. Then we st it running
-    myTimer = Timer.new(3)
+    myTimer = Timer.new(30)
     myTimer:startCounting()
     -- Declare our player
     myPlayer = Player.new(64, 64, img_2, seed)
