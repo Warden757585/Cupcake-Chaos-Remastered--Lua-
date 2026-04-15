@@ -32,6 +32,10 @@ function Timer:getTicksPassed()
     return self.ticksPassed
 end
 
+function Timer:getIsCounting()
+    return self.isCounting
+end
+
 function Timer:startCounting()
     self.isCounting = true
 end
