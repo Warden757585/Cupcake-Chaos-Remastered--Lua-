@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-local Cupcake = require("cupcake")
-local Player = require("player")
-local Timer = require("timer")
-=======
 local Cupcake = require("Cupcake")
 local Player = require("Player")
 local Timer = require("Timer")
 local jsonFileManager = require("JSON.jsonFileManager")
->>>>>>> 137e7a7eda5d0f1f60fa53e7b88067b0e57ecc0e
 
 local game = {}
 
