@@ -42,7 +42,7 @@ function menu.draw()
     love.graphics.clear()
     -- Get measurments for the title
     local titleX = (screenWidth / 2) - (textWidth / 2)
-    local titleY = (screenHeight / 2) - (textHeight * 7)
+    local titleY = (screenHeight / 2) - (textHeight * 5)
     -- Print the title
     love.graphics.print(title, titleX, titleY)
     -- Draw the button

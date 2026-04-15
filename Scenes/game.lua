@@ -1,13 +1,22 @@
+<<<<<<< HEAD
 local Cupcake = require("cupcake")
 local Player = require("player")
 local Timer = require("timer")
+=======
+local Cupcake = require("Cupcake")
+local Player = require("Player")
+local Timer = require("Timer")
+local jsonFileManager = require("JSON.jsonFileManager")
+>>>>>>> 137e7a7eda5d0f1f60fa53e7b88067b0e57ecc0e
 
 local game = {}
 
 local myPlayer
 local myTimer
+local myScoreManager
 local cupcakeIndex = {}
 local seed = 1
+local hasScored = false
 -- Font Variable(s):
 local mainFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
 local titleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 54, "normal", love.graphics.getDPIScale())
@@ -19,6 +28,9 @@ local doKeyDebug = false
 
 
 function game.load()
+    -- Set the jsonFileManager's filename
+    myScoreManager = jsonFileManager.new("highScores.json")
+    myScoreManager:load()
     -- Set the current font to mainFont
     love.graphics.setFont(mainFont)
     -- Load all images
@@ -87,6 +99,9 @@ function game.draw()
         end
         love.graphics.print("!GAME OVER! Final Score: " ..myPlayer.score , (love.graphics.getWidth() / 2) - (titleFont:getWidth("!GAME OVER! Final Score: " ..myPlayer.score) / 2), 100)
         myTimer:stopCounting()
+        if(hasScored == false) then
+            myScoreManager:addScore("score", myPlayer.score)
+        end
         game.unload()
     end
 end
@@ -95,6 +110,7 @@ function game.unload()
     for i = #cupcakeIndex, 1, -1 do
         table.remove(cupcakeIndex, i)
     end
+    hasScored = true
 end
 
 return game
