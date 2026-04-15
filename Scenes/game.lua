@@ -1,6 +1,6 @@
-local Cupcake = require("Cupcake")
-local Player = require("Player")
-local Timer = require("Timer")
+local Cupcake = require("cupcake")
+local Player = require("player")
+local Timer = require("timer")
 
 local game = {}
 
