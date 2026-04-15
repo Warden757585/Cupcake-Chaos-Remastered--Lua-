@@ -1,6 +1,5 @@
 local game = require("Scenes.game")
 local menu = require("Scenes.menu")
-local jsonFileManager = require("JSON.jsonFileManager")
 
 local scene = "menu"
 local nextScene = scene

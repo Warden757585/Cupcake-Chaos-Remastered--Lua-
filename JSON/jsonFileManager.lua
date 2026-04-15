@@ -40,11 +40,7 @@ function jsonFileManager:addScore(newName, newScore)
     table.sort(self.values, function(a, b)
         return a.score > b.score
     end)
-
-    while #self.values > 10 do
-        table.remove(self.values)
-    end
-
+    
     self:saveFile(self.values)
 end
 

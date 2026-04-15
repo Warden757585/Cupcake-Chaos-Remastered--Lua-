@@ -5,12 +5,15 @@ local jsonFileManager = require("JSON.jsonFileManager")
 
 local game = {}
 
+-- Object Variable(s):
 local myPlayer
 local myTimer
 local myScoreManager
 local cupcakeIndex = {}
+-- Game Variable(s):
 local seed = 1
 local hasScored = false
+local isGameOver = false
 -- Font Variable(s):
 local mainFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
 local titleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 54, "normal", love.graphics.getDPIScale())
@@ -33,8 +36,15 @@ function game.load()
     -- Add the cupcake(s) to the list of cupcakes index
     table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed, scoreSound)) -- Cupcake 1
     table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed, scoreSound)) -- Cupcake 2
+    -- Reset the isGameOver and hasScored variables to false for the new game
+    isGameOver = false
+    hasScored = false
     -- Set the timer to have our desired duration. Then we st it running
-    myTimer = Timer.new(30)
+    if doDebug then
+        myTimer = Timer.new(5)
+    else
+        myTimer = Timer.new(30)
+    end
     myTimer:startCounting()
     -- Declare our player
     myPlayer = Player.new(64, 64, img_2, seed)
@@ -49,12 +59,32 @@ function game.update(dt)
     myPlayer:playerMovement()
     myPlayer:checkCupcakes(cupcakeIndex)
     myTimer:updateTime(dt)
+    -- When 1 tick of our 30 second timer is up then end the game.
+    if myTimer.ticksPassed == 1 then
+        isGameOver = true
+    end
+    -- Game Over procedure:
+    if(isGameOver) then
+        -- Font change for game over text
+        if love.graphics.getFont() == mainFont then
+            love.graphics.setFont(titleFont)
+        end
+        -- If the player has not scored yet then add their score to the json file
+        if(hasScored == false) then
+            myScoreManager:addScore("score", myPlayer.score)
+            hasScored = true -- Then change hasScore to true to represent to the game that the player has score and not to socre multiple times
+        end
+        myTimer:stopCounting()
+        game.unload()
+    end
 end
 
 function game.keypressed(key)
 	if key == "escape" then
-        myTimer:stopCounting()
-		return "menu"
+		isGameOver = true
+        if isGameOver then
+            return "menu"
+        end
 	end
     if key == "f3" then
         doDebug = not doDebug
@@ -86,17 +116,8 @@ function game.draw()
             love.graphics.print("Cupcake " ..i.. " position: " ..cupcakeIndex[i].x.. ", " ..cupcakeIndex[i].y.. " !", 0, (love.graphics.getHeight() - 300) + 30 * i)
         end
     end
-    -- When 1 tick of our 30 second timer is up then end the game.
-    if myTimer.ticksPassed == 1 then
-        if love.graphics.getFont() == mainFont then
-            love.graphics.setFont(titleFont)
-        end
+    if isGameOver then
         love.graphics.print("!GAME OVER! Final Score: " ..myPlayer.score , (love.graphics.getWidth() / 2) - (titleFont:getWidth("!GAME OVER! Final Score: " ..myPlayer.score) / 2), 100)
-        myTimer:stopCounting()
-        if(hasScored == false) then
-            myScoreManager:addScore("score", myPlayer.score)
-        end
-        game.unload()
     end
 end
 
