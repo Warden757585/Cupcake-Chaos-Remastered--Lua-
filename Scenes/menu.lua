@@ -1,4 +1,5 @@
 local Button = require("button")
+local jsonFileManager = require("JSON.jsonFileManager")
 
 local menu = {}
 
@@ -15,6 +16,8 @@ local textWidth = titleFont:getWidth(title)
 local textHeight = titleFont:getHeight()
 -- Buttons and menu decorations
 local startButton
+-- JSON Manager:
+local myScoreManager
 
 function menu.load()
     -- Set the font to the titleFont
@@ -26,6 +29,9 @@ function menu.load()
     local Button_1 = love.graphics.newImage("Assets/Textures/Menu Textures/Buttons/320x160 px Button.png")
     -- Create the button
     startButton = Button.new(screenWidth / 2, screenHeight / 2, Button_1, "Start", titleFont)
+
+    -- Set te JSON manager's filename and load the file
+    myScoreManager = jsonFileManager.new("highScores.json")
 end
 
 function menu.update(dt)

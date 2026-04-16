@@ -27,7 +27,6 @@ local doKeyDebug = false
 function game.load()
     -- Set the jsonFileManager's filename
     myScoreManager = jsonFileManager.new("highScores.json")
-    myScoreManager:load()
     -- Set the current font to mainFont
     love.graphics.setFont(mainFont)
     -- Load all images
@@ -65,13 +64,9 @@ function game.update(dt)
     end
     -- Game Over procedure:
     if(isGameOver) then
-        -- Font change for game over text
-        if love.graphics.getFont() == mainFont then
-            love.graphics.setFont(titleFont)
-        end
         -- If the player has not scored yet then add their score to the json file
         if(hasScored == false) then
-            myScoreManager:addScore("score", myPlayer.score)
+            -- TODO: Add the JSON save score function here
             hasScored = true -- Then change hasScore to true to represent to the game that the player has score and not to socre multiple times
         end
         myTimer:stopCounting()
@@ -117,6 +112,9 @@ function game.draw()
         end
     end
     if isGameOver then
+        if love.graphics.getFont() == mainFont then
+            love.graphics.setFont(titleFont)
+        end
         love.graphics.print("!GAME OVER! Final Score: " ..myPlayer.score , (love.graphics.getWidth() / 2) - (titleFont:getWidth("!GAME OVER! Final Score: " ..myPlayer.score) / 2), 100)
     end
 end
