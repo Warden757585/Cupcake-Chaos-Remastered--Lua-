@@ -1,7 +1,7 @@
 local Player = {}
 Player.__index = Player
 
-function Player.new(x, y, img, seed, scoreSound)
+function Player.new(x, y, img, seed)
     local instance = setmetatable({}, Player)
     instance.x = x
     instance.y = y

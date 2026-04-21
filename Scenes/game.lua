@@ -17,7 +17,7 @@ local isGameOver = false
 local mainFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
 local titleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 54, "normal", love.graphics.getDPIScale())
 -- Audio variable(s):
-local scoreSound = love.audio.newSource("Assets/Audio/Legacy Audio/score.wav", "static")
+local scoreSound = love.audio.newSource("Assets/Audio/Legacy Audio/Score.wav", "static")
 -- Debug variable(s):
 local doDebug = false
 local doKeyDebug = false
