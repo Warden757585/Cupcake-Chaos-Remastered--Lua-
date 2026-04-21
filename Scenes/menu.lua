@@ -34,7 +34,7 @@ function menu.load()
 end
 
 function menu.update(dt)
-    if startButton:isClicked() then
+    if startButton:isClicked(dt) then
         startButton.text = "Starting..."
         return "game"
     end

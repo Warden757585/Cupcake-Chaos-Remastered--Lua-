@@ -1,15 +1,21 @@
 local Button = {}
 Button.__index = Button
 
-function Button.new(x, y, img, text, font)
+local Timer = require("Components.Interactive.timer")
+
+function Button.new(x, y, img, text, font, inputDelay)
     local instance = setmetatable({}, Button)
     instance.img = img
-    instance.text = text or "!test!"
+    instance.text = text or ""
     instance.font = font or love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
     instance.width = img:getWidth()
     instance.height = img:getHeight()
     instance.x = x - (instance.width / 2)
     instance.y = y - (instance.height / 2)
+    instance.inputDelay = inputDelay or 0.2
+    instance.inputTimer = Timer.new(instance.inputDelay)
+    instance.inputTimer:startCounting()
+    instance.isClickable = true
     return instance
 end
 
@@ -27,12 +33,19 @@ function Button:isMouseOver()
     end
 end
 
-function Button:isClicked()
-    if love.mouse.isDown(1) and self:isMouseOver() then
-        return true
-    else
-        return false
+function Button:isClicked(dt)
+    self.inputTimer:updateTime(dt)
+    if self.inputTimer:getTicksPassed() > 0 then
+        self.inputTimer:resetTicks()
+        self.isClickable = true
     end
+
+    if love.mouse.isDown(1) and self:isMouseOver() and self.isClickable then
+            self.isClickable = false
+            return true
+        else
+            return false
+        end
 end
 
 return Button
