@@ -1,4 +1,4 @@
-local Button = require("button")
+local Button = require("Components.UI.button")
 
 local menu = {}
 
@@ -61,6 +61,9 @@ function menu.keypressed(key)
     end
     if key == "f2" then
         doKeyDebug = not doKeyDebug
+    end
+    if key == "c" then
+        return "cosmetic_menu"
     end
     if(doKeyDebug) then
         print(key)        

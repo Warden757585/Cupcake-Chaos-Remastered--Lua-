@@ -1,6 +1,6 @@
 local Cupcake = require("Cupcake")
 local Player = require("Player")
-local Timer = require("Timer")
+local Timer = require("Components.Interactive.timer")
 
 local game = {}
 

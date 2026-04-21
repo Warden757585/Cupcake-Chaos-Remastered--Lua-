@@ -1,5 +1,6 @@
 local game = require("Scenes.game")
 local menu = require("Scenes.menu")
+local cosmetic_menu = require("Scenes.cosmetic_menu")
 
 local scene = "menu"
 local nextScene = scene
@@ -13,14 +14,23 @@ function love.load()
     if scene == "menu" then
         menu.load()
     end
+    if scene == "cosmetic_menu" then
+        cosmetic_menu.load()
+    end
 end
 
 function love.update(dt)
-    if scene == "game" then
-        game.update(dt)
-    end
-    if scene == "menu" then
-        nextScene = menu.update(dt)
+    -- Only call scene update if we're not already transitioning
+    if scene == nextScene then
+        if scene == "game" then
+            game.update(dt)
+        end
+        if scene == "menu" then
+            nextScene = menu.update(dt)
+        end
+        if scene == "cosmetic_menu" then
+            nextScene = cosmetic_menu.update(dt)
+        end
     end
 
     --Check if the current scene is equal to the next scene
@@ -34,6 +44,10 @@ function love.update(dt)
             game.load()
             scene = nextScene
         end
+        if nextScene == "cosmetic_menu" then
+            cosmetic_menu.load()
+            scene = nextScene
+        end
     end
 end
 
@@ -44,16 +58,28 @@ function love.draw()
     if scene == "menu" then
         menu.draw()
     end
+    if scene == "cosmetic_menu" then
+        cosmetic_menu.draw()
+    end
 end
 
 function love.keypressed(key)
     if scene == "game" then
-        game.keypressed(key)
-        if game.keypressed(key) == "menu" then
+        local result = game.keypressed(key)
+        if result == "menu" then
             nextScene = "menu"
         end
     end
     if scene == "menu" then
-        menu.keypressed(key)
+        local result = menu.keypressed(key)
+        if result == "cosmetic_menu" then
+            nextScene = "cosmetic_menu"
+        end
+    end
+    if scene == "cosmetic_menu" then
+        local result = cosmetic_menu.keypressed(key)
+        if result == "menu" then
+            nextScene = "menu"
+        end
     end
 end
