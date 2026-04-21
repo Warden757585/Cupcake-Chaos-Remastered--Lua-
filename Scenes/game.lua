@@ -1,7 +1,6 @@
 local Cupcake = require("Cupcake")
 local Player = require("Player")
 local Timer = require("Timer")
-local jsonFileManager = require("JSON.jsonFileManager")
 
 local game = {}
 
@@ -25,8 +24,6 @@ local doKeyDebug = false
 
 
 function game.load()
-    -- Set the jsonFileManager's filename
-    myScoreManager = jsonFileManager.new("highScores.json")
     -- Set the current font to mainFont
     love.graphics.setFont(mainFont)
     -- Load all images
