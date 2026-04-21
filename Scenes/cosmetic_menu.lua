@@ -1,9 +1,11 @@
 local Button = require("Components.UI.button")
+local Text = require("Components.UI.text")
 
 local cosmetic_menu = {}
 
 -- Font Variable(s):
 local titleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 54, "normal", love.graphics.getDPIScale())
+local largeTitleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 96, "normal", love.graphics.getDPIScale())
 -- Debug variable(s):
 local doDebug = false
 local doKeyDebug = false
@@ -12,6 +14,7 @@ local screenWidth = 0
 local screenHeight = 0
 -- Buttons and menu decorations
 local doneButton
+local titleText
 
 function cosmetic_menu.load()
     -- Set the font to the titleFont
@@ -23,8 +26,9 @@ function cosmetic_menu.load()
     local Button_1 = love.graphics.newImage("Assets/Textures/Menu Textures/Buttons/320x160 px Button.png")
     local Left_Arrow_Button = love.graphics.newImage("Assets/Textures/Menu Textures/Buttons/64x64 Left Arrow Button.png")
     local Right_Arrow_Button = love.graphics.newImage("Assets/Textures/Menu Textures/Buttons/64x64 Right Arrow Button.png")
-
+    -- Create the UI elements
     doneButton = Button.new(screenWidth / 2, (screenHeight / 4) * 3, Button_1, "Done", titleFont)
+    titleText = Text.new(screenWidth / 2, screenHeight / 4, "Cosmetic Menu", largeTitleFont)
 end
 
 function cosmetic_menu.update(dt)
@@ -39,6 +43,8 @@ function cosmetic_menu.draw()
     love.graphics.clear()
     -- Draw the doneButton
     doneButton:draw()
+    -- Draw the title text
+    titleText:draw()
 end
 
 function cosmetic_menu.keypressed(key)
