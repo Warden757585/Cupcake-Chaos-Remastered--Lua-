@@ -27,8 +27,8 @@ function game.load()
     -- Set the current font to mainFont
     love.graphics.setFont(mainFont)
     -- Load all images
-    local img_1 = love.graphics.newImage("Assets/Textures/Default Textures/cupcwake.png")
-    local img_2 = love.graphics.newImage("Assets/Textures/Default Textures/porple guy.png")
+    local img_1 = love.graphics.newImage("Assets/Textures/Default Textures/Cupcake/cupcwake.png")
+    local img_2 = love.graphics.newImage("Assets/Textures/Default Textures/Player/blu guy.png")
     -- Add the cupcake(s) to the list of cupcakes index
     table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed, scoreSound)) -- Cupcake 1
     table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed, scoreSound)) -- Cupcake 2
