@@ -17,4 +17,12 @@ function Text:draw()
     love.graphics.print(self.text, self.x, self.y)
 end
 
+function Text:changeText(newText)
+    self.text = newText
+    self.width = self.font:getWidth(self.text)
+    self.height = self.font:getHeight()
+    self.x = self.x + (self.width / 2) - (self.width / 2)
+    self.y = self.y + (self.height / 2) - (self.height / 2)
+end
+
 return Text

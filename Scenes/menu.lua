@@ -17,6 +17,7 @@ local textWidth = largeTitleFont:getWidth(title)
 local textHeight = largeTitleFont:getHeight()
 -- Buttons and menu decorations
 local startButton
+local cosmeticMenuButton
 local titleText
 
 function menu.load()
@@ -27,8 +28,10 @@ function menu.load()
     screenHeight = love.graphics.getHeight()
     -- Load button image(s)
     local Button_1 = love.graphics.newImage("Assets/Textures/Menu Textures/Buttons/320x160 px Button.png")
-    -- Create the button
+    -- Create the start button
     startButton = Button.new(screenWidth / 2, screenHeight / 2, Button_1, "Start", titleFont)
+    -- Create the cosmetic menu button
+    cosmeticMenuButton = Button.new(screenWidth / 2, (screenHeight / 3) * 2, Button_1, "Cosmetic Menu", titleFont)
     -- Create the title text
     titleText = Text.new(screenWidth / 2, screenHeight / 4, title, largeTitleFont)
 end
@@ -38,15 +41,21 @@ function menu.update(dt)
         startButton.text = "Starting..."
         return "game"
     end
+    if cosmeticMenuButton:isClicked(dt) then
+        cosmeticMenuButton.text = "Loading..."
+        return "cosmetic_menu"
+    end
     return "menu"
 end
 
 function menu.draw()
-    
     -- Clear the screen for drawing
     love.graphics.clear()
+    -- Draw the menu components
     startButton:draw()
+    cosmeticMenuButton:draw()
     titleText:draw()
+    -- Debug Info drawing
     if doDebug then
         love.graphics.print("Mouse: " ..love.mouse.getX().. ", " ..love.mouse.getY().. " Button Top Left: " ..startButton.x.. ", " ..startButton.y , 0, 0)
     end
@@ -61,9 +70,6 @@ function menu.keypressed(key)
     end
     if key == "f2" then
         doKeyDebug = not doKeyDebug
-    end
-    if key == "c" then
-        return "cosmetic_menu"
     end
     if(doKeyDebug) then
         print(key)        

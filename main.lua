@@ -74,9 +74,6 @@ function love.keypressed(key)
     end
     if scene == "menu" then
         local result = menu.keypressed(key)
-        if result == "cosmetic_menu" then
-            nextScene = "cosmetic_menu"
-        end
     end
     if scene == "cosmetic_menu" then
         local result = cosmetic_menu.keypressed(key)
