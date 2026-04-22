@@ -5,6 +5,7 @@ function Display.new(x, y, img, imgs, scaling, rotation)
     local instance = setmetatable({}, Display)
     instance.img = img
     instance.imgs = imgs or {}
+    instance.hatImg = nil
     instance.scaling = scaling or 1
     instance.rotation = rotation or 0
     instance.width = instance.img:getWidth() * scaling
@@ -35,8 +36,28 @@ function Display:changeImgFromList(index, imagePacktype, imgList)
     end
 end
 
+function Display:changeHatFromList(index, imgList)
+    if imgList and #imgList > 0 and index > 0 and index <= #imgList then
+        self.hatImg = imgList[index]
+    else
+        self.hatImg = nil
+    end
+end
+
+
 function Display:getImagePackType()
     return self.imagePackType
+end
+
+function Display:renderHatAccesory()
+    if self.hatImg ~= nil then
+        local hatScale = self.scaling * 2
+        local hatWidth = self.hatImg:getWidth() * hatScale
+        local hatHeight = self.hatImg:getHeight() * hatScale
+        local hatX = self.x + (self.width - hatWidth) / 2
+        local hatY = self.y - hatHeight / 2
+        love.graphics.draw(self.hatImg, hatX, hatY, self.rotation, hatScale, hatScale)
+    end
 end
 
 return Display

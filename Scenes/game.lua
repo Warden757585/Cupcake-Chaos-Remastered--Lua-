@@ -7,8 +7,8 @@ local game = {}
 -- Object Variable(s):
 local myPlayer
 local myTimer
-local myScoreManager
 local cupcakeIndex = {}
+local playerHatSprite
 -- Game Variable(s):
 local seed = 1
 local hasScored = false
@@ -23,7 +23,7 @@ local doDebug = false
 local doKeyDebug = false
 
 
-function game.load(playerBodySprite)
+function game.load(playerBodySprite, hatSprite)
     -- Set the current font to mainFont
     love.graphics.setFont(mainFont)
     -- Load all images
@@ -34,7 +34,12 @@ function game.load(playerBodySprite)
     else
         img_2 = playerBodySprite
     end
-    -- Add the cupcake(s) to the list of cupcakes index
+    -- Store the hat sprite
+    if type(hatSprite) == "string" then
+        playerHatSprite = love.graphics.newImage(hatSprite)
+    else
+        playerHatSprite = hatSprite
+    end
     table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed, scoreSound)) -- Cupcake 1
     table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed, scoreSound)) -- Cupcake 2
     -- Reset the isGameOver and hasScored variables to false for the new game
@@ -102,6 +107,7 @@ function game.draw()
         cupcake:draw()
     end
     myPlayer:draw()
+    myPlayer:renderHatAccesory(playerHatSprite)
     if love.graphics.getFont() == titleFont then
         love.graphics.setFont(mainFont)
     end

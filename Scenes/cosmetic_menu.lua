@@ -19,11 +19,19 @@ local screenHeight = 0
 local doneButton
 local titleText
 local packText
+-- Body selecter stuff
 local bodyDisplay
 local bodyDisplayImgs = {}
 local bodyDisplayIndex = 1
 local leftBodySelecterArrow
 local rightBodySelecterArrow
+-- Hat selecter stuff
+local hatDisplayImgs = {}
+local hatDisplayIndex = 1
+local leftHatSelecterArrow
+local rightHatSelecterArrow
+-- Audio Variable(s):
+local buttonPressSound = love.audio.newSource("Assets/Audio/Default Audio/Menu Blip 1.wav", "static")
 
 function cosmetic_menu.load()
     -- Set the font to the titleFont
@@ -43,6 +51,10 @@ function cosmetic_menu.load()
     local Default_Player_Porple = love.graphics.newImage("Assets/Textures/Default Textures/Player/porple guy.png")
     local Default_Player_Gween = love.graphics.newImage("Assets/Textures/Default Textures/Player/gween guy.png")
     local Default_Player_Wewwow = love.graphics.newImage("Assets/Textures/Default Textures/Player/wewwow guy.png")
+    local Default_Hat_TopHat = love.graphics.newImage("Assets/Textures/Default Textures/Player/Accesories/Hats/top hat.png")
+    -- Clear the image tables if they have data
+    bodyDisplayImgs = {}
+    hatDisplayImgs = {}
     -- Add all the body images to the list
     table.insert(bodyDisplayImgs, Default_Player_Blu)
     table.insert(bodyDisplayImgs, Default_Player_Red)
@@ -54,34 +66,53 @@ function cosmetic_menu.load()
     for i in ipairs(bodyDisplayImgs) do
         bodyDisplayImgs[i]:setFilter("nearest", "nearest")
     end
-    -- Create the UI elements
-    doneButton = Button.new(screenWidth / 2, (screenHeight / 6) * 5, Button_1, "Done", titleFont)
+    -- Add hats to their respective list and set their scaling filter
+    table.insert(hatDisplayImgs, Default_Hat_TopHat)
+    for i in ipairs(hatDisplayImgs) do
+        hatDisplayImgs[i]:setFilter("nearest", "nearest")
+    end
+    -- Create the UI elements (preserve button state if they exist, otherwise create new)
+    if not doneButton then
+        doneButton = Button.new(screenWidth / 2, (screenHeight / 6) * 5, Button_1, "Done", titleFont)
+    end
     titleText = Text.new(10, 0, "Cosmetic Menu", largeTitleFont)
     titleText.y = titleText.y + titleText.height
     titleText.x = titleText.x + (titleText.width / 2)
     packText = Text.new(screenWidth / 2, (screenHeight / 8) * 5, "Default Pack", titleFont)
     bodyDisplay = Display.new(screenWidth / 2, screenHeight / 2, Default_Player_Blu, bodyDisplayImgs, 2)
-    leftBodySelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2, Left_Arrow_Button, nil, nil, 0.45)
-    rightBodySelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2, Right_Arrow_Button, nil, nil, 0.45)
+    if not leftBodySelecterArrow then
+        leftBodySelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2, Left_Arrow_Button, nil, nil, 0.6)
+        rightBodySelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2, Right_Arrow_Button, nil, nil, 0.6)
+        leftHatSelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2 - Default_Hat_TopHat:getHeight() * 2, Left_Arrow_Button, nil, nil, 0.6)
+        rightHatSelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2 - Default_Hat_TopHat:getHeight() * 2, Right_Arrow_Button, nil, nil, 0.6)
+    end
+    -- Restore the hat selection
+    if hatDisplayIndex > #hatDisplayImgs then
+        bodyDisplay.hatImg = nil
+    else
+        bodyDisplay:changeHatFromList(hatDisplayIndex, hatDisplayImgs)
+    end
 end
 
 function cosmetic_menu.update(dt)
-    if doneButton:isClicked(dt) then
+    cosmetic_menu.bodyArrowUpdate(dt)
+    cosmetic_menu.hatArrowUpdate(dt)
+    if doneButton:isClicked(dt, buttonPressSound) then
         return "menu"
     end
     return "cosmetic_menu"
 end
 
-function cosmetic_menu.arrowUpdate(dt)
+function cosmetic_menu.bodyArrowUpdate(dt)
     
-    if leftBodySelecterArrow:isClicked(dt) then
+    if leftBodySelecterArrow:isClicked(dt, buttonPressSound) then
         bodyDisplayIndex = bodyDisplayIndex - 1
         if bodyDisplayIndex < 1 then
             bodyDisplayIndex = #bodyDisplayImgs
         end
     end
 
-    if rightBodySelecterArrow:isClicked(dt) then
+    if rightBodySelecterArrow:isClicked(dt, buttonPressSound) then
         bodyDisplayIndex = bodyDisplayIndex + 1
         if bodyDisplayIndex > #bodyDisplayImgs then
             bodyDisplayIndex = 1
@@ -98,6 +129,30 @@ function cosmetic_menu.arrowUpdate(dt)
     return bodyDisplayImgs[bodyDisplayIndex]
 end
 
+function cosmetic_menu.hatArrowUpdate(dt)
+    
+    if leftHatSelecterArrow:isClicked(dt, buttonPressSound) then
+        hatDisplayIndex = hatDisplayIndex - 1
+        if hatDisplayIndex < 1 then
+            hatDisplayIndex = #hatDisplayImgs + 1  -- +1 for "no hat" option
+        end
+    end
+
+    if rightHatSelecterArrow:isClicked(dt, buttonPressSound) then
+        hatDisplayIndex = hatDisplayIndex + 1
+        if hatDisplayIndex > #hatDisplayImgs + 1 then  -- +1 for "no hat" option
+            hatDisplayIndex = 1
+        end
+    end
+
+    if hatDisplayIndex > #hatDisplayImgs then
+        bodyDisplay.hatImg = nil  -- Remove hat
+    else
+        bodyDisplay:changeHatFromList(hatDisplayIndex, hatDisplayImgs)
+    end
+    return hatDisplayImgs[hatDisplayIndex] or nil
+end
+
 function cosmetic_menu.draw()
     -- Clear the screen for drawing
     love.graphics.clear()
@@ -109,9 +164,13 @@ function cosmetic_menu.draw()
     packText:draw()
     -- Draw the body display
     bodyDisplay:draw()
+    bodyDisplay:renderHatAccesory()
     -- Draw the body selecter arrows
     leftBodySelecterArrow:draw()
     rightBodySelecterArrow:draw()
+    -- Draw the hat selecter arrows
+    leftHatSelecterArrow:draw()
+    rightHatSelecterArrow:draw()
 end
 
 function cosmetic_menu.keypressed(key)

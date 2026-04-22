@@ -15,7 +15,7 @@ function Button.new(x, y, img, text, font, inputDelay)
     instance.inputDelay = inputDelay or 0.2
     instance.inputTimer = Timer.new(instance.inputDelay)
     instance.inputTimer:startCounting()
-    instance.isClickable = true
+    instance.isClickable = false
     return instance
 end
 
@@ -33,7 +33,7 @@ function Button:isMouseOver()
     end
 end
 
-function Button:isClicked(dt)
+function Button:isClicked(dt, pressSound)
     self.inputTimer:updateTime(dt)
     if self.inputTimer:getTicksPassed() > 0 then
         self.inputTimer:resetTicks()
@@ -42,6 +42,9 @@ function Button:isClicked(dt)
 
     if love.mouse.isDown(1) and self:isMouseOver() and self.isClickable then
             self.isClickable = false
+            if pressSound ~= nil then
+                love.audio.play(pressSound)
+            end
             return true
         else
             return false

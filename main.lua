@@ -5,12 +5,13 @@ local cosmetic_menu = require("Scenes.cosmetic_menu")
 local scene = "menu"
 local nextScene = scene
 local playerBodySprite = "Assets/Textures/Default Textures/Player/blu guy.png"
+local playerHatSprite = "Assets/Textures/Default Textures/Player/Accesories/Hats/top hat.png"
 
 function love.load()
     -- Set the screen to fullscreen 
     love.window.setFullscreen(true)
     if scene == "game" then
-        game.load(playerBodySprite)
+        game.load(playerBodySprite, playerHatSprite)
     end
     if scene == "menu" then
         menu.load()
@@ -31,7 +32,8 @@ function love.update(dt)
         end
         if scene == "cosmetic_menu" then
             nextScene = cosmetic_menu.update(dt)
-            playerBodySprite = cosmetic_menu.arrowUpdate(dt)
+            playerBodySprite = cosmetic_menu.bodyArrowUpdate(dt)
+            playerHatSprite = cosmetic_menu.hatArrowUpdate(dt)
         end
     end
 
@@ -43,7 +45,7 @@ function love.update(dt)
             scene = nextScene
         end
         if nextScene == "game" then
-            game.load(playerBodySprite)
+            game.load(playerBodySprite, playerHatSprite)
             scene = nextScene
         end
         if nextScene == "cosmetic_menu" then

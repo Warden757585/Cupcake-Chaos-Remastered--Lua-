@@ -19,6 +19,8 @@ local textHeight = largeTitleFont:getHeight()
 local startButton
 local cosmeticMenuButton
 local titleText
+-- Audio Variable(s):
+local buttonPressSound = love.audio.newSource("Assets/Audio/Default Audio/Menu Blip 1.wav", "static")
 
 function menu.load()
     -- Set the font to the titleFont
@@ -37,11 +39,11 @@ function menu.load()
 end
 
 function menu.update(dt)
-    if startButton:isClicked(dt) then
+    if startButton:isClicked(dt, buttonPressSound) then
         startButton.text = "Starting..."
         return "game"
     end
-    if cosmeticMenuButton:isClicked(dt) then
+    if cosmeticMenuButton:isClicked(dt, buttonPressSound) then
         cosmeticMenuButton.text = "Loading..."
         return "cosmetic_menu"
     end
