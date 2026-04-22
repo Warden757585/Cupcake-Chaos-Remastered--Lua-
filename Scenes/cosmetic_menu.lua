@@ -53,11 +53,19 @@ function cosmetic_menu.load()
     titleText.y = titleText.y + titleText.height
     titleText.x = titleText.x + (titleText.width / 2)
     bodyDisplay = Display.new(screenWidth / 2, screenHeight / 2, Default_Player_Blu, bodyDisplayImgs)
-    leftBodySelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2, Left_Arrow_Button, nil, nil, 0.2)
-    rightBodySelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2, Right_Arrow_Button, nil, nil, 0.2)
+    leftBodySelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2, Left_Arrow_Button, nil, nil, 0.5)
+    rightBodySelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2, Right_Arrow_Button, nil, nil, 0.5)
 end
 
 function cosmetic_menu.update(dt)
+    if doneButton:isClicked(dt) then
+        return "menu"
+    end
+    return "cosmetic_menu"
+end
+
+function cosmetic_menu.arrowUpdate(dt)
+    
     if leftBodySelecterArrow:isClicked(dt) then
         bodyDisplayIndex = bodyDisplayIndex - 1
         if bodyDisplayIndex < 1 then
@@ -73,11 +81,7 @@ function cosmetic_menu.update(dt)
     end
 
     bodyDisplay:changeImgFromList(bodyDisplayImgs, bodyDisplayIndex)
-
-    if doneButton:isClicked(dt) then
-        return "menu"
-    end
-    return "cosmetic_menu"
+    return bodyDisplayImgs[bodyDisplayIndex]
 end
 
 function cosmetic_menu.draw()
