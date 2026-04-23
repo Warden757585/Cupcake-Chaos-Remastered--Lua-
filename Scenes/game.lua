@@ -13,7 +13,7 @@ local cupcakeBatch
 local playerBatch
 local hatBatch
 -- Game Variable(s):
-local seed = 1
+local seed = love.math.newRandomGenerator():random(100000000000000)
 local hasScored = false
 local isGameOver = false
 -- Font Variable(s):
