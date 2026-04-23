@@ -1,15 +1,17 @@
 local Player = {}
 Player.__index = Player
 
-function Player.new(x, y, img, seed, scoreSound)
+function Player.new(x, y, img, seed, scaling, rotation)
     local instance = setmetatable({}, Player)
-    instance.x = x
-    instance.y = y
     instance.img = img
     instance.seed = seed
+    instance.scaling = scaling or 1
+    instance.rotation = rotation or 0
+    instance.width = instance.img:getWidth() * instance.scaling
+    instance.height = instance.img:getHeight() * instance.scaling
+    instance.x = x - instance.width / 2
+    instance.y = y - instance.height / 2
     instance.score = 0
-    instance.width = img:getWidth()
-    instance.height = img:getHeight()
     instance.speed = 1
     instance.x_velocity = 0
     instance.y_velocity = 0
@@ -18,7 +20,7 @@ function Player.new(x, y, img, seed, scoreSound)
 end
 
 function Player:draw()
-    love.graphics.draw(self.img, self.x - (self.width / 2), self.y - (self.height / 2))
+    love.graphics.draw(self.img, self.x, self.y, self.rotation, self.scaling, self.scaling)
 end
 
 
@@ -44,9 +46,17 @@ function Player:playerMovement()
         self.x_velocity = self.x_velocity + (1 * (self.speed / 1.5))
     end
 
+    -- Calculate center position
+    local centerX = self.x + self.width / 2
+    local centerY = self.y + self.height / 2
+
     -- Update the position based on the velocity
-    self.x = self.x + self.x_velocity
-    self.y = self.y + self.y_velocity
+    centerX = centerX + self.x_velocity
+    centerY = centerY + self.y_velocity
+
+    -- Recalculate top-left position
+    self.x = centerX - self.width / 2
+    self.y = centerY - self.height / 2
 
     -- Apply damping to slow the player
     self.x_velocity = self.x_velocity * 0.9
@@ -63,10 +73,10 @@ end
 
 function Player:baseCollisionCheck(x, y, width, height)
     -- Player boundaries
-    local pLeft   = self.x - (self.width / 2)
-    local pRight  = self.x + (self.width / 2)
-    local pTop    = self.y - (self.height / 2)
-    local pBottom = self.y + (self.height / 2)
+    local pLeft   = self.x
+    local pRight  = self.x + self.width
+    local pTop    = self.y
+    local pBottom = self.y + self.height
     -- Object boundaries
     local cLeft   = x - (width / 2)
     local cRight  = x + (width / 2)
@@ -88,5 +98,15 @@ function Player:checkCupcakes(cupcakeList)
     end
 end
 
+function Player:renderHatAccesory(hatImg)
+    if hatImg ~= nil then
+        local hatScale = self.scaling * 2
+        local hatWidth = hatImg:getWidth() * hatScale
+        local hatHeight = hatImg:getHeight() * hatScale
+        local hatX = self.x + (self.width - hatWidth) / 2
+        local hatY = self.y - hatHeight / 2
+        love.graphics.draw(hatImg, hatX, hatY, self.rotation, hatScale, hatScale)
+    end
+end
 
 return Player

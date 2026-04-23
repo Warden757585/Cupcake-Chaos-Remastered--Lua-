@@ -1,39 +1,45 @@
 local Cupcake = require("Cupcake")
 local Player = require("Player")
-local Timer = require("Timer")
-local jsonFileManager = require("JSON.jsonFileManager")
+local Timer = require("Components.Interactive.timer")
 
 local game = {}
 
 -- Object Variable(s):
 local myPlayer
 local myTimer
-local myScoreManager
 local cupcakeIndex = {}
+local playerHatSprite
 -- Game Variable(s):
 local seed = 1
 local hasScored = false
 local isGameOver = false
 -- Font Variable(s):
-local mainFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
+local mainFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 36, "normal", love.graphics.getDPIScale())
 local titleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 54, "normal", love.graphics.getDPIScale())
 -- Audio variable(s):
-local scoreSound = love.audio.newSource("Assets/Audio/Legacy Audio/score.wav", "static")
+local scoreSound = love.audio.newSource("Assets/Audio/Legacy Audio/Score.wav", "static")
 -- Debug variable(s):
 local doDebug = false
 local doKeyDebug = false
 
 
-function game.load()
-    -- Set the jsonFileManager's filename
-    myScoreManager = jsonFileManager.new("highScores.json")
-    myScoreManager:load()
+function game.load(playerBodySprite, hatSprite)
     -- Set the current font to mainFont
     love.graphics.setFont(mainFont)
     -- Load all images
-    local img_1 = love.graphics.newImage("Assets/Textures/Default Textures/cupcwake.png")
-    local img_2 = love.graphics.newImage("Assets/Textures/Default Textures/porple guy.png")
-    -- Add the cupcake(s) to the list of cupcakes index
+    local img_1 = love.graphics.newImage("Assets/Textures/Default Textures/Cupcake/cupcwake.png")
+    local img_2
+    if type(playerBodySprite) == "string" then
+        img_2 = love.graphics.newImage(playerBodySprite)
+    else
+        img_2 = playerBodySprite
+    end
+    -- Store the hat sprite
+    if type(hatSprite) == "string" then
+        playerHatSprite = love.graphics.newImage(hatSprite)
+    else
+        playerHatSprite = hatSprite
+    end
     table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed, scoreSound)) -- Cupcake 1
     table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed, scoreSound)) -- Cupcake 2
     -- Reset the isGameOver and hasScored variables to false for the new game
@@ -65,13 +71,9 @@ function game.update(dt)
     end
     -- Game Over procedure:
     if(isGameOver) then
-        -- Font change for game over text
-        if love.graphics.getFont() == mainFont then
-            love.graphics.setFont(titleFont)
-        end
         -- If the player has not scored yet then add their score to the json file
         if(hasScored == false) then
-            myScoreManager:addScore("score", myPlayer.score)
+            -- TODO: Add the JSON save score function here
             hasScored = true -- Then change hasScore to true to represent to the game that the player has score and not to socre multiple times
         end
         myTimer:stopCounting()
@@ -105,6 +107,7 @@ function game.draw()
         cupcake:draw()
     end
     myPlayer:draw()
+    myPlayer:renderHatAccesory(playerHatSprite)
     if love.graphics.getFont() == titleFont then
         love.graphics.setFont(mainFont)
     end
@@ -117,6 +120,9 @@ function game.draw()
         end
     end
     if isGameOver then
+        if love.graphics.getFont() == mainFont then
+            love.graphics.setFont(titleFont)
+        end
         love.graphics.print("!GAME OVER! Final Score: " ..myPlayer.score , (love.graphics.getWidth() / 2) - (titleFont:getWidth("!GAME OVER! Final Score: " ..myPlayer.score) / 2), 100)
     end
 end
