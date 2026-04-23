@@ -80,6 +80,7 @@ function cosmetic_menu.load()
     titleText.x = titleText.x + (titleText.width / 2)
     packText = Text.new(screenWidth / 2, (screenHeight / 8) * 5, "Default Pack", titleFont)
     bodyDisplay = Display.new(screenWidth / 2, screenHeight / 2, Default_Player_Blu, bodyDisplayImgs, 2)
+    -- Only make the selecter arrows when they don't exist.
     if not leftBodySelecterArrow then
         leftBodySelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2, Left_Arrow_Button, nil, nil, 0.6)
         rightBodySelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2, Right_Arrow_Button, nil, nil, 0.6)
@@ -142,21 +143,21 @@ function cosmetic_menu.bodyArrowUpdate(dt)
 end
 
 function cosmetic_menu.hatArrowUpdate(dt)
-    
+    -- Check for left arrow click
     if leftHatSelecterArrow:isClicked(dt, buttonPressSound) then
         hatDisplayIndex = hatDisplayIndex - 1
         if hatDisplayIndex < 1 then
             hatDisplayIndex = #hatDisplayImgs + 1  -- +1 for "no hat" option
         end
     end
-
+    -- Check for right arrow click
     if rightHatSelecterArrow:isClicked(dt, buttonPressSound) then
         hatDisplayIndex = hatDisplayIndex + 1
         if hatDisplayIndex > #hatDisplayImgs + 1 then  -- +1 for "no hat" option
             hatDisplayIndex = 1
         end
     end
-
+    -- Update the hat display based on the current index
     if hatDisplayIndex > #hatDisplayImgs then
         bodyDisplay.hatImg = nil  -- Remove hat
     else
