@@ -19,8 +19,11 @@ function Player.new(x, y, img, seed, scaling, rotation)
     return instance
 end
 
-function Player:draw()
-    love.graphics.draw(self.img, self.x, self.y, self.rotation, self.scaling, self.scaling)
+function Player:draw(spriteBatch)
+    if not self.quad then
+        self.quad = love.graphics.newQuad(0, 0, self.img:getWidth(), self.img:getHeight(), self.img)
+    end
+    spriteBatch:add(self.quad, self.x, self.y, self.rotation, self.scaling, self.scaling)
 end
 
 
@@ -59,8 +62,8 @@ function Player:playerMovement()
     self.y = centerY - self.height / 2
 
     -- Apply damping to slow the player
-    self.x_velocity = self.x_velocity * 0.9
-    self.y_velocity = self.y_velocity * 0.9
+    self.x_velocity = self.x_velocity * 0.94
+    self.y_velocity = self.y_velocity * 0.94
     -- If the velocity is an insignificant amount then just set it to 0 
     if (self.x_velocity < 0.5 and self.x_velocity > -0.5) then
     
@@ -98,14 +101,17 @@ function Player:checkCupcakes(cupcakeList)
     end
 end
 
-function Player:renderHatAccesory(hatImg)
+function Player:renderHatAccesory(hatImg, spriteBatch)
     if hatImg ~= nil then
         local hatScale = self.scaling * 2
         local hatWidth = hatImg:getWidth() * hatScale
         local hatHeight = hatImg:getHeight() * hatScale
         local hatX = self.x + (self.width - hatWidth) / 2
         local hatY = self.y - hatHeight / 2
-        love.graphics.draw(hatImg, hatX, hatY, self.rotation, hatScale, hatScale)
+        if not self.hatQuad then
+            self.hatQuad = love.graphics.newQuad(0, 0, hatImg:getWidth(), hatImg:getHeight(), hatImg)
+        end
+        spriteBatch:add(self.hatQuad, hatX, hatY, self.rotation, hatScale, hatScale)
     end
 end
 

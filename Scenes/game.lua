@@ -9,6 +9,9 @@ local myPlayer
 local myTimer
 local cupcakeIndex = {}
 local playerHatSprite
+local cupcakeBatch
+local playerBatch
+local hatBatch
 -- Game Variable(s):
 local seed = 1
 local hasScored = false
@@ -59,6 +62,10 @@ function game.load(playerBodySprite, hatSprite)
     for i, cupcake in ipairs(cupcakeIndex) do
         cupcakeIndex[i].seed = cupcakeIndex[i].seed + i * 100200300
     end
+    -- Create separate sprite batches for each image type
+    cupcakeBatch = love.graphics.newSpriteBatch(img_1, 100, "dynamic")
+    playerBatch = love.graphics.newSpriteBatch(img_2, 100, "dynamic")
+    hatBatch = love.graphics.newSpriteBatch(playerHatSprite, 100, "dynamic")
 end
 
 function game.update(dt)
@@ -102,16 +109,22 @@ end
 function game.draw()
     -- Clear the screen for drawing
     love.graphics.clear()
+    cupcakeBatch:clear()
+    playerBatch:clear()
+    hatBatch:clear()
     -- Draw the cupcake and player
     for i, cupcake in ipairs(cupcakeIndex) do
-        cupcake:draw()
+        cupcake:draw(cupcakeBatch)
     end
-    myPlayer:draw()
-    myPlayer:renderHatAccesory(playerHatSprite)
+    myPlayer:draw(playerBatch)
+    myPlayer:renderHatAccesory(playerHatSprite, hatBatch)
     if love.graphics.getFont() == titleFont then
         love.graphics.setFont(mainFont)
     end
     love.graphics.print("Score: " ..myPlayer.score.. " Speed: " ..myPlayer.speed.. " Time Used: " ..myTimer:getTime(), 0, 5)
+    love.graphics.draw(cupcakeBatch)
+    love.graphics.draw(playerBatch)
+    love.graphics.draw(hatBatch)
 
     --If debugging is enables then print extra info to the screen
     if (doDebug) then
