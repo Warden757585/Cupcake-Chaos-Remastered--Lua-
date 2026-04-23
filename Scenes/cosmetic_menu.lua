@@ -85,6 +85,18 @@ function cosmetic_menu.load()
         rightBodySelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2, Right_Arrow_Button, nil, nil, 0.6)
         leftHatSelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2 - Default_Hat_TopHat:getHeight() * 2, Left_Arrow_Button, nil, nil, 0.6)
         rightHatSelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2 - Default_Hat_TopHat:getHeight() * 2, Right_Arrow_Button, nil, nil, 0.6)
+    else
+        -- Reset button timers when returning to the menu
+        doneButton.inputTimer:resetTicks()
+        doneButton.isClickable = false
+        leftBodySelecterArrow.inputTimer:resetTicks()
+        leftBodySelecterArrow.isClickable = false
+        rightBodySelecterArrow.inputTimer:resetTicks()
+        rightBodySelecterArrow.isClickable = false
+        leftHatSelecterArrow.inputTimer:resetTicks()
+        leftHatSelecterArrow.isClickable = false
+        rightHatSelecterArrow.inputTimer:resetTicks()
+        rightHatSelecterArrow.isClickable = false
     end
     -- Restore the hat selection
     if hatDisplayIndex > #hatDisplayImgs then
