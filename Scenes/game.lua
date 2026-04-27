@@ -1,6 +1,8 @@
 local Cupcake = require("Cupcake")
 local Player = require("Player")
 local Timer = require("Components.Interactive.timer")
+local TileAtlas = require("Tilemap.tile_atlas")
+local TileMap = require("Tilemap.tile_map")
 
 local game = {}
 
@@ -9,6 +11,10 @@ local myPlayer
 local myTimer
 local cupcakeIndex = {}
 local playerHatSprite
+-- Tilemap Variable(s):
+local tileAtlas
+local tileMap
+-- Sprite Batches:
 local cupcakeBatch
 local playerBatch
 local hatBatch
@@ -59,13 +65,19 @@ function game.load(playerBodySprite, hatSprite)
     myPlayer = Player.new(64, 64, img_2, seed)
     -- Assign each cupcake its own individual seed so that they do not re-position to the same coordinates
     -- Changing the game's seed still affects each cupcake
-    for i, cupcake in ipairs(cupcakeIndex) do
+    for i in ipairs(cupcakeIndex) do
         cupcakeIndex[i].seed = cupcakeIndex[i].seed + i * 100200300
     end
     -- Create separate sprite batches for each image type
     cupcakeBatch = love.graphics.newSpriteBatch(img_1, 100, "dynamic")
     playerBatch = love.graphics.newSpriteBatch(img_2, 100, "dynamic")
     hatBatch = love.graphics.newSpriteBatch(playerHatSprite, 100, "dynamic")
+
+    -- Tile map stuff:
+    local tile1 = love.graphics.newImage("Assets/Textures/Tilemaps/test/blue.png")
+    local tile2 = love.graphics.newImage("Assets/Textures/Tilemaps/test/green.png")
+    tileAtlas = TileAtlas.new({tile1, tile2})
+    tileMap = TileMap.new(64, tileAtlas)
 end
 
 function game.update(dt)
@@ -112,6 +124,11 @@ function game.draw()
     cupcakeBatch:clear()
     playerBatch:clear()
     hatBatch:clear()
+    -- Tilemap Drawing:
+    local matrix = {{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1},
+                    {2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2},
+                    {2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1}}
+    tileMap:draw(matrix)
     -- Draw the cupcake and player
     for i, cupcake in ipairs(cupcakeIndex) do
         cupcake:draw(cupcakeBatch)
