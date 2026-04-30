@@ -13,13 +13,12 @@ local cupcakeIndex = {}
 local playerHatSprite
 -- Tilemap Variable(s):
 local tileAtlas
-local tileMap
 -- Sprite Batches:
 local cupcakeBatch
 local playerBatch
 local hatBatch
 -- Game Variable(s):
-local seed = love.math.newRandomGenerator():random(100000000000000)
+local seed
 local hasScored = false
 local isGameOver = false
 -- Font Variable(s):
@@ -33,6 +32,8 @@ local doKeyDebug = false
 
 
 function game.load(playerBodySprite, hatSprite)
+    seed = os.time() + love.timer.getTime() * 1000
+    love.math.setRandomSeed(os.time())
     -- Set the current font to mainFont
     love.graphics.setFont(mainFont)
     -- Load all images
@@ -44,13 +45,19 @@ function game.load(playerBodySprite, hatSprite)
         img_2 = playerBodySprite
     end
     -- Store the hat sprite
-    if type(hatSprite) == "string" then
+    if type(hatSprite) == "string" and hatSprite ~= "no hat" then
         playerHatSprite = love.graphics.newImage(hatSprite)
+    elseif hatSprite == "no hat" then
+        playerHatSprite = nil
     else
         playerHatSprite = hatSprite
     end
     table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed, scoreSound)) -- Cupcake 1
     table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed, scoreSound)) -- Cupcake 2
+    for i in ipairs(cupcakeIndex) do
+        cupcakeIndex[i].x = love.math.random(0, love.graphics.getWidth() - cupcakeIndex[i].width)
+        cupcakeIndex[i].y = love.math.random(0, love.graphics.getHeight() - cupcakeIndex[i].height)
+    end
     -- Reset the isGameOver and hasScored variables to false for the new game
     isGameOver = false
     hasScored = false
@@ -71,13 +78,12 @@ function game.load(playerBodySprite, hatSprite)
     -- Create separate sprite batches for each image type
     cupcakeBatch = love.graphics.newSpriteBatch(img_1, 100, "dynamic")
     playerBatch = love.graphics.newSpriteBatch(img_2, 100, "dynamic")
-    hatBatch = love.graphics.newSpriteBatch(playerHatSprite, 100, "dynamic")
-
+    if playerHatSprite ~= nil then
+        hatBatch = love.graphics.newSpriteBatch(playerHatSprite, 100, "dynamic")
+    end
     -- Tile map stuff:
-    local tile1 = love.graphics.newImage("Assets/Textures/Tilemaps/test/blue.png")
-    local tile2 = love.graphics.newImage("Assets/Textures/Tilemaps/test/green.png")
-    tileAtlas = TileAtlas.new({tile1, tile2})
-    tileMap = TileMap.new(64, tileAtlas)
+    tileAtlas = TileAtlas.new(love.graphics.newImage("Assets/Textures/Tilemaps/test/kitchen_v1.png"), 4) -- Assets/Textures/Tilemaps/test/kitchen_v1.png has 18x18 (324) tiles 
+    tileAtlas:loadFromTileset()
 end
 
 function game.update(dt)
@@ -118,17 +124,26 @@ function game.keypressed(key)
     end
 end
 
+
+local floorLayerMatrix = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                         {0, 0, 0, 0, 0, 0, 0, 283, 284, 285},
+                         {0, 0, 0, 0, 0, 0, 0, 301, 302, 303},
+                         {0, 0, 0, 0, 0, 0, 0, 319, 320, 321}}
+local wallLayerMatrix = {{0, 0, 0, 0, 0, 0, 0, 322, 323, 324},
+                         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                         {0, 0, 0, 0, 0, 0, 0, 0, 291, 0}}
+
 function game.draw()
     -- Clear the screen for drawing
     love.graphics.clear()
     cupcakeBatch:clear()
     playerBatch:clear()
-    hatBatch:clear()
+    if playerHatSprite ~= nil then
+        hatBatch:clear()
+    end
     -- Tilemap Drawing:
-    local matrix = {{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1},
-                    {2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2},
-                    {2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1}}
-    tileMap:draw(matrix)
+    tileAtlas:drawLayer(floorLayerMatrix)
+    tileAtlas:drawLayer(wallLayerMatrix)
     -- Draw the cupcake and player
     for i, cupcake in ipairs(cupcakeIndex) do
         cupcake:draw(cupcakeBatch)
@@ -141,7 +156,9 @@ function game.draw()
     love.graphics.print("Score: " ..myPlayer.score.. " Speed: " ..myPlayer.speed.. " Time Used: " ..myTimer:getTime(), 0, 5)
     love.graphics.draw(cupcakeBatch)
     love.graphics.draw(playerBatch)
-    love.graphics.draw(hatBatch)
+    if playerHatSprite ~= nil then
+        love.graphics.draw(hatBatch)
+    end
 
     --If debugging is enables then print extra info to the screen
     if (doDebug) then
