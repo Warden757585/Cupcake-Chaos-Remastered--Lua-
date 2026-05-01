@@ -14,11 +14,8 @@ function Cupcake.new(x, y, img, seed, scoreSound)
     return instance
 end
 
-function Cupcake:draw(spriteBatch)
-    if not self.quad then
-        self.quad = love.graphics.newQuad(0, 0, self.width, self.height, self.img)
-    end
-    spriteBatch:add(self.quad, self.x - (self.width / 2), self.y - (self.height / 2), 0, 1, 1)
+function Cupcake:draw()
+    love.graphics.draw(self.img, self.x, self.y, 0, 1, 1, self.width/2, self.height/2)
 end
 
 function Cupcake:rePosition()
