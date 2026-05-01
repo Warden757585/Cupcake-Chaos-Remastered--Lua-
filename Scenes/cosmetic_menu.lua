@@ -75,29 +75,17 @@ function cosmetic_menu.load()
     if not doneButton then
         doneButton = Button.new(screenWidth / 2, (screenHeight / 6) * 5, Button_1, "Done", titleFont)
     end
-    titleText = Text.new(10, 0, "Cosmetic Menu", largeTitleFont)
+    titleText = Text.new(10, 0, "Cosmetic Menu", largeTitleFont, true)
     titleText.y = titleText.y + titleText.height
     titleText.x = titleText.x + (titleText.width / 2)
     packText = Text.new(screenWidth / 2, (screenHeight / 8) * 5, "Default Pack", titleFont)
     bodyDisplay = Display.new(screenWidth / 2, screenHeight / 2, Default_Player_Blu, bodyDisplayImgs, 2)
     -- Only make the selecter arrows when they don't exist.
     if not leftBodySelecterArrow then
-        leftBodySelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2, Left_Arrow_Button, nil, nil, 0.6)
-        rightBodySelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2, Right_Arrow_Button, nil, nil, 0.6)
-        leftHatSelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2 - Default_Hat_TopHat:getHeight() * 2, Left_Arrow_Button, nil, nil, 0.6)
-        rightHatSelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2 - Default_Hat_TopHat:getHeight() * 2, Right_Arrow_Button, nil, nil, 0.6)
-    else
-        -- Reset button timers when returning to the menu
-        doneButton.inputTimer:resetTicks()
-        doneButton.isClickable = false
-        leftBodySelecterArrow.inputTimer:resetTicks()
-        leftBodySelecterArrow.isClickable = false
-        rightBodySelecterArrow.inputTimer:resetTicks()
-        rightBodySelecterArrow.isClickable = false
-        leftHatSelecterArrow.inputTimer:resetTicks()
-        leftHatSelecterArrow.isClickable = false
-        rightHatSelecterArrow.inputTimer:resetTicks()
-        rightHatSelecterArrow.isClickable = false
+        leftBodySelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2, Left_Arrow_Button, nil, nil)
+        rightBodySelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2, Right_Arrow_Button, nil, nil)
+        leftHatSelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2 - Default_Hat_TopHat:getHeight() * 2, Left_Arrow_Button, nil, nil)
+        rightHatSelecterArrow = Button.new((screenWidth / 2) + (bodyDisplay.width / 2) + 128, screenHeight / 2 - Default_Hat_TopHat:getHeight() * 2, Right_Arrow_Button, nil, nil)
     end
     -- Restore the hat selection
     if hatDisplayIndex > #hatDisplayImgs then

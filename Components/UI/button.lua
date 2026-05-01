@@ -1,9 +1,7 @@
 local Button = {}
 Button.__index = Button
 
-local Timer = require("Components.Interactive.timer")
-
-function Button.new(x, y, img, text, font, inputDelay)
+function Button.new(x, y, img, text, font)
     local instance = setmetatable({}, Button)
     instance.img = img
     instance.text = text or ""
@@ -12,10 +10,7 @@ function Button.new(x, y, img, text, font, inputDelay)
     instance.height = img:getHeight()
     instance.x = x - (instance.width / 2)
     instance.y = y - (instance.height / 2)
-    instance.inputDelay = inputDelay or 0.2
-    instance.inputTimer = Timer.new(instance.inputDelay)
-    instance.inputTimer:startCounting()
-    instance.isClickable = false
+    instance.mouseDownLastFrame = false
     return instance
 end
 
@@ -34,21 +29,18 @@ function Button:isMouseOver()
 end
 
 function Button:isClicked(dt, pressSound)
-    self.inputTimer:updateTime(dt)
-    if self.inputTimer:getTicksPassed() > 0 then
-        self.inputTimer:resetTicks()
-        self.isClickable = true
+    local isDown = love.mouse.isDown(1)
+    local result = false
+
+    if isDown and not self.mouseDownLastFrame and self:isMouseOver() then
+        if pressSound ~= nil then
+            love.audio.play(pressSound)
+        end
+        result = true
     end
 
-    if love.mouse.isDown(1) and self:isMouseOver() and self.isClickable then
-            self.isClickable = false
-            if pressSound ~= nil then
-                love.audio.play(pressSound)
-            end
-            return true
-        else
-            return false
-        end
+    self.mouseDownLastFrame = isDown
+    return result
 end
 
 return Button
