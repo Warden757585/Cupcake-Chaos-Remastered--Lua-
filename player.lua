@@ -79,13 +79,11 @@ function Player:playerMovement()
 end
 
 function Player:baseCollisionCheck(other)
-    -- Player (Top-Left based)
     local pLeft   = self.x
     local pRight  = self.x + self.width
     local pTop    = self.y
     local pBottom = self.y + self.height
 
-    -- Cupcake (Center based, as per your code)
     local cLeft   = other.x - (other.width / 2)
     local cRight  = other.x + (other.width / 2)
     local cTop    = other.y - (other.height / 2)
