@@ -1,7 +1,7 @@
 local Player = {}
 Player.__index = Player
 
-function Player.new(x, y, img, seed, scaling, rotation)
+function Player.new(img, seed, scaling, rotation)
     local instance = setmetatable({}, Player)
     instance.img = img
     instance.seed = seed
@@ -9,8 +9,8 @@ function Player.new(x, y, img, seed, scaling, rotation)
     instance.rotation = rotation or 0
     instance.width = instance.img:getWidth() * instance.scaling
     instance.height = instance.img:getHeight() * instance.scaling
-    instance.x = x - instance.width / 2
-    instance.y = y - instance.height / 2
+    instance.x = 0
+    instance.y = 0 
     instance.score = 0
     instance.speed = 1
     instance.x_velocity = 0
@@ -19,11 +19,15 @@ function Player.new(x, y, img, seed, scaling, rotation)
     return instance
 end
 
-function Player:draw(spriteBatch)
-    if not self.quad then
-        self.quad = love.graphics.newQuad(0, 0, self.img:getWidth(), self.img:getHeight(), self.img)
-    end
-    spriteBatch:add(self.quad, self.x, self.y, self.rotation, self.scaling, self.scaling)
+function Player:changePosition()
+    math.randomseed(self.seed)
+    self.x = math.random(self.width / 2, love.graphics.getWidth() - self.width / 2)
+    self.y = math.random(self.height / 2, love.graphics.getHeight() - self.height / 2)
+    self.seed = self.seed + 1
+end
+
+function Player:draw()
+    love.graphics.draw(self.img, self.x, self.y, self.rotation, self.scaling, self.scaling)
 end
 
 
@@ -74,18 +78,17 @@ function Player:playerMovement()
     end
 end
 
-function Player:baseCollisionCheck(x, y, width, height)
-    -- Player boundaries
+function Player:baseCollisionCheck(other)
     local pLeft   = self.x
     local pRight  = self.x + self.width
     local pTop    = self.y
     local pBottom = self.y + self.height
-    -- Object boundaries
-    local cLeft   = x - (width / 2)
-    local cRight  = x + (width / 2)
-    local cTop    = y - (height / 2)
-    local cBottom = y + (height / 2)
-    -- If any are true then the object and plaer aren't touching
+
+    local cLeft   = other.x - (other.width / 2)
+    local cRight  = other.x + (other.width / 2)
+    local cTop    = other.y - (other.height / 2)
+    local cBottom = other.y + (other.height / 2)
+
     return pLeft < cRight and
            pRight > cLeft and
            pTop < cBottom and
@@ -94,24 +97,21 @@ end
 
 function Player:checkCupcakes(cupcakeList)
     for i = #cupcakeList, 1, -1 do
-        if(self:baseCollisionCheck(cupcakeList[i].x, cupcakeList[i].y, cupcakeList[i].width, cupcakeList[i].height) == true) then
+        if(self:baseCollisionCheck(cupcakeList[i]) == true) then
             cupcakeList[i]:rePosition()
             self.score = self.score + 1
         end
     end
 end
 
-function Player:renderHatAccesory(hatImg, spriteBatch)
+function Player:renderHatAccesory(hatImg)
     if hatImg ~= nil then
         local hatScale = self.scaling * 2
         local hatWidth = hatImg:getWidth() * hatScale
         local hatHeight = hatImg:getHeight() * hatScale
         local hatX = self.x + (self.width - hatWidth) / 2
         local hatY = self.y - hatHeight / 2
-        if not self.hatQuad then
-            self.hatQuad = love.graphics.newQuad(0, 0, hatImg:getWidth(), hatImg:getHeight(), hatImg)
-        end
-        spriteBatch:add(self.hatQuad, hatX, hatY, self.rotation, hatScale, hatScale)
+        love.graphics.draw(hatImg, hatX, hatY, self.rotation, hatScale, hatScale)
     end
 end
 

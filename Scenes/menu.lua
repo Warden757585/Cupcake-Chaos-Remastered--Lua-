@@ -1,9 +1,12 @@
 local Button = require("Components.UI.button")
 local Text = require("Components.UI.text")
+local Utils = require("Utils.utils")
 
 local menu = {}
 
 -- Font Variable(s):
+local defaultFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
+local largeDefaultFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 36, "normal", love.graphics.getDPIScale())
 local titleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 54, "normal", love.graphics.getDPIScale())
 local largeTitleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 96, "normal", love.graphics.getDPIScale())
 -- Debug variable(s):
@@ -13,12 +16,14 @@ local doKeyDebug = false
 local screenWidth = 0
 local screenHeight = 0
 local title = "Welcome to Cupcake Chaos"
-local textWidth = largeTitleFont:getWidth(title)
-local textHeight = largeTitleFont:getHeight()
+local scoreTitle = "High Scores:"
+local topScores
 -- Buttons and menu decorations
 local startButton
 local cosmeticMenuButton
 local titleText
+local scoreTitleText
+local scoreTexts = {}
 -- Audio Variable(s):
 local buttonPressSound = love.audio.newSource("Assets/Audio/Default Audio/Menu Blip 1.wav", "static")
 
@@ -35,7 +40,16 @@ function menu.load()
     -- Create the cosmetic menu button
     cosmeticMenuButton = Button.new(screenWidth / 2, (screenHeight / 3) * 2, Button_1, "Cosmetic Menu", titleFont)
     -- Create the title text
-    titleText = Text.new(screenWidth / 2, screenHeight / 4, title, largeTitleFont)
+    titleText = Text.new(screenWidth / 2, screenHeight / 4, title, largeTitleFont, true)
+    -- Get the ten highest scores
+    topScores = Utils.getTopScores(10)
+    -- Create the score text objects
+    scoreTexts = {}
+    scoreTitleText = Text.new(10, 0, scoreTitle, titleFont)
+    for i, score in ipairs(topScores) do
+        local scoreText = Text.new(10, 10 + (i * 40), score.time .. " - Score: " .. score.score, largeDefaultFont)
+        table.insert(scoreTexts, scoreText)
+    end
 end
 
 function menu.update(dt)
@@ -57,6 +71,10 @@ function menu.draw()
     startButton:draw()
     cosmeticMenuButton:draw()
     titleText:draw()
+    scoreTitleText:draw()
+    for i, scoreText in ipairs(scoreTexts) do
+        scoreText:draw()
+    end
     -- Debug Info drawing
     if doDebug then
         love.graphics.print("Mouse: " ..love.mouse.getX().. ", " ..love.mouse.getY().. " Button Top Left: " ..startButton.x.. ", " ..startButton.y , 0, 0)

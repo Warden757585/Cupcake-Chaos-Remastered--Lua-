@@ -2,7 +2,7 @@ local Cupcake = require("Cupcake")
 local Player = require("Player")
 local Timer = require("Components.Interactive.timer")
 local TileAtlas = require("Tilemap.tile_atlas")
-local TileMap = require("Tilemap.tile_map")
+local Utils = require("Utils.utils")
 
 local game = {}
 
@@ -13,23 +13,23 @@ local cupcakeIndex = {}
 local playerHatSprite
 -- Tilemap Variable(s):
 local tileAtlas
--- Sprite Batches:
-local cupcakeBatch
-local playerBatch
-local hatBatch
 -- Game Variable(s):
 local seed
 local hasScored = false
 local isGameOver = false
 -- Font Variable(s):
+local defaultFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
 local mainFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 36, "normal", love.graphics.getDPIScale())
 local titleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 54, "normal", love.graphics.getDPIScale())
+local largeTitleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 96, "normal", love.graphics.getDPIScale())
 -- Audio variable(s):
 local scoreSound = love.audio.newSource("Assets/Audio/Legacy Audio/Score.wav", "static")
 -- Debug variable(s):
 local doDebug = false
 local doKeyDebug = false
-
+-- Image Variable(s):
+local cupcakeImg
+local playerImg
 
 function game.load(playerBodySprite, hatSprite)
     seed = os.time() + love.timer.getTime() * 1000
@@ -37,12 +37,11 @@ function game.load(playerBodySprite, hatSprite)
     -- Set the current font to mainFont
     love.graphics.setFont(mainFont)
     -- Load all images
-    local img_1 = love.graphics.newImage("Assets/Textures/Default Textures/Cupcake/cupcwake.png")
-    local img_2
+    cupcakeImg = love.graphics.newImage("Assets/Textures/Default Textures/Cupcake/cupcwake.png")
     if type(playerBodySprite) == "string" then
-        img_2 = love.graphics.newImage(playerBodySprite)
+        playerImg = love.graphics.newImage(playerBodySprite)
     else
-        img_2 = playerBodySprite
+        playerImg = playerBodySprite
     end
     -- Store the hat sprite
     if type(hatSprite) == "string" and hatSprite ~= "no hat" then
@@ -52,8 +51,8 @@ function game.load(playerBodySprite, hatSprite)
     else
         playerHatSprite = hatSprite
     end
-    table.insert(cupcakeIndex, Cupcake.new(350, 250, img_1, seed, scoreSound)) -- Cupcake 1
-    table.insert(cupcakeIndex, Cupcake.new(650, 550, img_1, seed, scoreSound)) -- Cupcake 2
+    table.insert(cupcakeIndex, Cupcake.new(0, 0, cupcakeImg, seed, scoreSound)) -- Cupcake 1
+    table.insert(cupcakeIndex, Cupcake.new(0, 0, cupcakeImg, seed, scoreSound)) -- Cupcake 2
     for i in ipairs(cupcakeIndex) do
         cupcakeIndex[i].x = love.math.random(0, love.graphics.getWidth() - cupcakeIndex[i].width)
         cupcakeIndex[i].y = love.math.random(0, love.graphics.getHeight() - cupcakeIndex[i].height)
@@ -69,21 +68,18 @@ function game.load(playerBodySprite, hatSprite)
     end
     myTimer:startCounting()
     -- Declare our player
-    myPlayer = Player.new(64, 64, img_2, seed)
+    myPlayer = Player.new(playerImg, seed)
+    myPlayer:changePosition() -- Change the player's position to a random location at the start of the game
     -- Assign each cupcake its own individual seed so that they do not re-position to the same coordinates
     -- Changing the game's seed still affects each cupcake
     for i in ipairs(cupcakeIndex) do
         cupcakeIndex[i].seed = cupcakeIndex[i].seed + i * 100200300
     end
-    -- Create separate sprite batches for each image type
-    cupcakeBatch = love.graphics.newSpriteBatch(img_1, 100, "dynamic")
-    playerBatch = love.graphics.newSpriteBatch(img_2, 100, "dynamic")
-    if playerHatSprite ~= nil then
-        hatBatch = love.graphics.newSpriteBatch(playerHatSprite, 100, "dynamic")
-    end
     -- Tile map stuff:
-    tileAtlas = TileAtlas.new(love.graphics.newImage("Assets/Textures/Tilemaps/test/kitchen_v1.png"), 4) -- Assets/Textures/Tilemaps/test/kitchen_v1.png has 18x18 (324) tiles 
+    tileAtlas = TileAtlas.new(love.graphics.newImage("Assets/Textures/Tilemaps/Default Tilemap/kitchen_v1.png"), 4) -- Assets/Textures/Tilemaps/test/kitchen_v1.png has 18x18 (324) tiles 
     tileAtlas:loadFromTileset()
+    -- Utils Testing:
+    Utils.init()
 end
 
 function game.update(dt)
@@ -98,8 +94,8 @@ function game.update(dt)
     if(isGameOver) then
         -- If the player has not scored yet then add their score to the json file
         if(hasScored == false) then
-            -- TODO: Add the JSON save score function here
-            hasScored = true -- Then change hasScore to true to represent to the game that the player has score and not to socre multiple times
+            Utils.addScore(myPlayer.score)
+            hasScored = true -- Then change hasScore to true to represent to the game that the player has score and not to score multiple times
         end
         myTimer:stopCounting()
         game.unload()
@@ -136,29 +132,19 @@ local wallLayerMatrix = {{0, 0, 0, 0, 0, 0, 0, 322, 323, 324},
 function game.draw()
     -- Clear the screen for drawing
     love.graphics.clear()
-    cupcakeBatch:clear()
-    playerBatch:clear()
-    if playerHatSprite ~= nil then
-        hatBatch:clear()
-    end
     -- Tilemap Drawing:
     tileAtlas:drawLayer(floorLayerMatrix)
     tileAtlas:drawLayer(wallLayerMatrix)
     -- Draw the cupcake and player
     for i, cupcake in ipairs(cupcakeIndex) do
-        cupcake:draw(cupcakeBatch)
+        cupcake:draw()
     end
-    myPlayer:draw(playerBatch)
-    myPlayer:renderHatAccesory(playerHatSprite, hatBatch)
+    myPlayer:draw()
+    myPlayer:renderHatAccesory(playerHatSprite)
     if love.graphics.getFont() == titleFont then
         love.graphics.setFont(mainFont)
     end
     love.graphics.print("Score: " ..myPlayer.score.. " Speed: " ..myPlayer.speed.. " Time Used: " ..myTimer:getTime(), 0, 5)
-    love.graphics.draw(cupcakeBatch)
-    love.graphics.draw(playerBatch)
-    if playerHatSprite ~= nil then
-        love.graphics.draw(hatBatch)
-    end
 
     --If debugging is enables then print extra info to the screen
     if (doDebug) then
