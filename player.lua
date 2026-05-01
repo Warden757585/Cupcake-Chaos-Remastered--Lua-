@@ -9,14 +9,21 @@ function Player.new(x, y, img, seed, scaling, rotation)
     instance.rotation = rotation or 0
     instance.width = instance.img:getWidth() * instance.scaling
     instance.height = instance.img:getHeight() * instance.scaling
-    instance.x = x - instance.width / 2
-    instance.y = y - instance.height / 2
+    instance.x = 0
+    instance.y = 0 
     instance.score = 0
     instance.speed = 1
     instance.x_velocity = 0
     instance.y_velocity = 0
     instance.type = "Player"
     return instance
+end
+
+function Player:changePosition()
+    math.randomseed(self.seed)
+    self.x = math.random(self.width / 2, love.graphics.getWidth() - self.width / 2)
+    self.y = math.random(self.height / 2, love.graphics.getHeight() - self.height / 2)
+    self.seed = self.seed + 1
 end
 
 function Player:draw(spriteBatch)

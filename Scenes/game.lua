@@ -22,8 +22,10 @@ local seed
 local hasScored = false
 local isGameOver = false
 -- Font Variable(s):
+local defaultFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 24, "normal", love.graphics.getDPIScale())
 local mainFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 36, "normal", love.graphics.getDPIScale())
 local titleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 54, "normal", love.graphics.getDPIScale())
+local largeTitleFont = love.graphics.newFont("Assets/Fonts/Legacy Fonts/VT323.ttf", 96, "normal", love.graphics.getDPIScale())
 -- Audio variable(s):
 local scoreSound = love.audio.newSource("Assets/Audio/Legacy Audio/Score.wav", "static")
 -- Debug variable(s):
@@ -70,6 +72,7 @@ function game.load(playerBodySprite, hatSprite)
     myTimer:startCounting()
     -- Declare our player
     myPlayer = Player.new(64, 64, img_2, seed)
+    myPlayer:changePosition() -- Change the player's position to a random location at the start of the game
     -- Assign each cupcake its own individual seed so that they do not re-position to the same coordinates
     -- Changing the game's seed still affects each cupcake
     for i in ipairs(cupcakeIndex) do
@@ -86,7 +89,7 @@ function game.load(playerBodySprite, hatSprite)
     tileAtlas:loadFromTileset()
     -- Utils Testing:
     Utils.init()
-    end
+end
 
 function game.update(dt)
     myPlayer:playerMovement()

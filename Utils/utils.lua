@@ -70,4 +70,13 @@ function utils.addScore(score)
     end
 end
 
+function utils.getTopScores(n)
+    local data = utils.loadScores()
+    local topScores = {}
+    for i = 1, math.min(n, #data) do
+        table.insert(topScores, data[i])
+    end
+    return topScores
+end
+
 return utils
