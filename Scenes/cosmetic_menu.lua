@@ -163,7 +163,7 @@ function cosmetic_menu.hatArrowUpdate(dt)
     else
         bodyDisplay:changeHatFromList(hatDisplayIndex, hatDisplayImgs)
     end
-    return hatDisplayImgs[hatDisplayIndex] or nil
+    return hatDisplayImgs[hatDisplayIndex] or "no hat"
 end
 
 function cosmetic_menu.draw()

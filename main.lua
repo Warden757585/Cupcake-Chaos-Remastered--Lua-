@@ -10,6 +10,8 @@ local playerHatSprite = "Assets/Textures/Default Textures/Player/Accesories/Hats
 function love.load()
     -- Set the screen to fullscreen 
     love.window.setFullscreen(true)
+    -- Change the compression of images:
+    love.graphics.setDefaultFilter("nearest", "nearest")
     if scene == "game" then
         game.load(playerBodySprite, playerHatSprite)
     end
