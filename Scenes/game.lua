@@ -82,7 +82,7 @@ function game.load(playerBodySprite, hatSprite)
         hatBatch = love.graphics.newSpriteBatch(playerHatSprite, 100, "dynamic")
     end
     -- Tile map stuff:
-    tileAtlas = TileAtlas.new(love.graphics.newImage("Assets/Textures/Tilemaps/test/kitchen_v1.png"), 4) -- Assets/Textures/Tilemaps/test/kitchen_v1.png has 18x18 (324) tiles 
+    tileAtlas = TileAtlas.new(love.graphics.newImage("Assets/Textures/Tilemaps/Default Tilemap/kitchen_v1.png"), 4) -- Assets/Textures/Tilemaps/test/kitchen_v1.png has 18x18 (324) tiles 
     tileAtlas:loadFromTileset()
 end
 
