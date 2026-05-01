@@ -2,7 +2,7 @@ local Cupcake = require("Cupcake")
 local Player = require("Player")
 local Timer = require("Components.Interactive.timer")
 local TileAtlas = require("Tilemap.tile_atlas")
-local TileMap = require("Tilemap.tile_map")
+local Utils = require("Utils.utils")
 
 local game = {}
 
@@ -84,7 +84,9 @@ function game.load(playerBodySprite, hatSprite)
     -- Tile map stuff:
     tileAtlas = TileAtlas.new(love.graphics.newImage("Assets/Textures/Tilemaps/Default Tilemap/kitchen_v1.png"), 4) -- Assets/Textures/Tilemaps/test/kitchen_v1.png has 18x18 (324) tiles 
     tileAtlas:loadFromTileset()
-end
+    -- Utils Testing:
+    Utils.init()
+    end
 
 function game.update(dt)
     myPlayer:playerMovement()
@@ -98,8 +100,8 @@ function game.update(dt)
     if(isGameOver) then
         -- If the player has not scored yet then add their score to the json file
         if(hasScored == false) then
-            -- TODO: Add the JSON save score function here
-            hasScored = true -- Then change hasScore to true to represent to the game that the player has score and not to socre multiple times
+            Utils.addScore(myPlayer.score)
+            hasScored = true -- Then change hasScore to true to represent to the game that the player has score and not to score multiple times
         end
         myTimer:stopCounting()
         game.unload()
