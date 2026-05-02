@@ -1,6 +1,6 @@
 local Button = require("Components.UI.button")
 local Text = require("Components.UI.text")
-local Utils = require("Utils.utils")
+local utils = require("Utils.utils")
 
 local menu = {}
 
@@ -42,7 +42,7 @@ function menu.load()
     -- Create the title text
     titleText = Text.new(screenWidth / 2, screenHeight / 4, title, largeTitleFont, true)
     -- Get the ten highest scores
-    topScores = Utils.getTopScores(10)
+    topScores = utils.getTopScores(10)
     -- Create the score text objects
     scoreTexts = {}
     scoreTitleText = Text.new(10, 0, scoreTitle, titleFont)
@@ -50,6 +50,7 @@ function menu.load()
         local scoreText = Text.new(10, 10 + (i * 40), score.time .. " - Score: " .. score.score, largeDefaultFont)
         table.insert(scoreTexts, scoreText)
     end
+    utils.loadResourceScripts()
 end
 
 function menu.update(dt)

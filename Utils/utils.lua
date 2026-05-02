@@ -93,6 +93,64 @@ function utils.loadResourcePacks()
     return assetTable
 end
 
+function utils.loadResourceScripts()
+    print("--------------------")
+    print("Scripts Loading:")
+    local scriptTable = {}
+    local chunkTable = {}
+    local lineCount = 1
+    if doResourcePacks then
+        for line in love.filesystem.lines("packs.CupcakeChaosFile") do
+            if lineCount == 1 then
+                if line:match("Packs:") then
+                    print("     Pack file valid")
+                else
+                    print("     Invalid pack file: stopping resource loading!")
+                    return
+                end
+                lineCount = lineCount + 1
+            else
+                -- This pattern looks for: [Everything] then " - Score: " then [The Number]
+                local packName, packDirectory = line:match("%-%s*([^,]+),%s*(.+)")
+                --print("Sucsessfully loaded: " .. packName .. ", " .. packDirectory)
+                local packContents = love.filesystem.getDirectoryItems(packDirectory)
+                for i, filename in ipairs(packContents) do
+                    if filename == "Scripts" then
+                        local scripts = love.filesystem.getDirectoryItems(packDirectory .. "/" .. "Scripts")
+                        for i, script in ipairs(scripts) do
+                            if script:lower():match("%.lua$") then
+                                print("     " .. packDirectory .. "/" .. filename .. "/" .. script .. " was found!")
+                                local path = packDirectory .. "/" .. filename .. "/" .. script
+                                local chunk, err = love.filesystem.load(path)
+
+                                if chunk then
+                                    table.insert(chunkTable, chunk)
+                                    print("     " .. path .. " was successfully loaded!")
+                                else
+                                    print("     ERROR loading " .. path .. ": " .. tostring(err))
+                                end
+                            end
+                        end
+                        for i, chunk in ipairs(chunkTable) do
+                            local success, result = pcall(chunk)
+                            if success then
+                                table.insert(scriptTable, result)
+                            else
+                                print("     Script Execution Error: " .. tostring(result))
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    print("Scripts loaded!")
+    print("--------------------")
+    return scriptTable
+    -- TODO: Next make it so that the api wraps the player in game.lua or main.lua and then runs the user's script
+end
+
+
 function utils.loadScores()
     if love.filesystem.getInfo("scores.txt") then
         --[[ print("Scores loaded!") ]]
