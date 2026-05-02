@@ -27,13 +27,6 @@ function Text:changeText(newText)
     self.text = newText
     self.width = self.font:getWidth(self.text)
     self.height = self.font:getHeight()
-    if self.isCentered then
-        self.x = self.x - (self.width / 2)
-        self.y = self.y - (self.height / 2)
-    else
-        self.x = self.x
-        self.y = self.y
-    end
 end
 
 return Text

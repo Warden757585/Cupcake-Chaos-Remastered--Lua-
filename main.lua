@@ -1,15 +1,23 @@
+local utils = require("Utils.utils")
 local game = require("Scenes.game")
 local menu = require("Scenes.menu")
 local cosmetic_menu = require("Scenes.cosmetic_menu")
 
 local scene = "menu"
 local nextScene = scene
-local playerBodySprite = "Assets/Textures/Default Textures/Player/blu guy.png"
-local playerHatSprite = "Assets/Textures/Default Textures/Player/Accesories/Hats/top hat.png"
+local playerBodySprite
+local playerHatSprite
+
+local assetTable
 
 function love.load()
+    playerBodySprite = love.graphics.newImage("Assets/Textures/Default Textures/Player/blu guy.png")
+    playerHatSprite = love.graphics.newImage("Assets/Textures/Default Textures/Player/Accesories/Hats/top hat.png")
     -- Set the screen to fullscreen 
     love.window.setFullscreen(true)
+    -- Utility Manager init:
+    utils.init()
+    assetTable = utils.loadResourcePacks()
     -- Change the compression of images:
     love.graphics.setDefaultFilter("nearest", "nearest")
     if scene == "game" then
@@ -19,7 +27,8 @@ function love.load()
         menu.load()
     end
     if scene == "cosmetic_menu" then
-        cosmetic_menu.load()
+        cosmetic_menu.load(assetTable)
+        --cosmetic_menu.addResourcePacks(assetTable)
     end
 end
 
@@ -51,7 +60,7 @@ function love.update(dt)
             scene = nextScene
         end
         if nextScene == "cosmetic_menu" then
-            cosmetic_menu.load()
+            cosmetic_menu.load(assetTable)
             scene = nextScene
         end
     end

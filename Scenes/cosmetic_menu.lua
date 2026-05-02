@@ -33,7 +33,21 @@ local rightHatSelecterArrow
 -- Audio Variable(s):
 local buttonPressSound = love.audio.newSource("Assets/Audio/Default Audio/Menu Blip 1.wav", "static")
 
-function cosmetic_menu.load()
+function cosmetic_menu.addResourcePacks(assetTable)
+    for i, asset in ipairs(assetTable) do
+        local path = asset[1]
+        local packName = asset[2]
+        local assetType = asset[3]
+        if assetType == "playerTexture" then
+            table.insert(bodyDisplayImgs, {love.graphics.newImage(path), packName})
+            --print("Sucsessfully added " .. path .. " from " .. packName .. " into the game!")
+        end
+    end
+    print("Resource Pack Assets sucsessfully loaded")
+end
+
+
+function cosmetic_menu.load(assetTable)
     -- Set the font to the titleFont
     love.graphics.setFont(titleFont)
     -- Get the screen widht and height
@@ -56,15 +70,15 @@ function cosmetic_menu.load()
     bodyDisplayImgs = {}
     hatDisplayImgs = {}
     -- Add all the body images to the list
-    table.insert(bodyDisplayImgs, Default_Player_Blu)
-    table.insert(bodyDisplayImgs, Default_Player_Red)
-    table.insert(bodyDisplayImgs, Default_Player_Porple)
-    table.insert(bodyDisplayImgs, Default_Player_Gween)
-    table.insert(bodyDisplayImgs, Default_Player_Wewwow)
-    table.insert(bodyDisplayImgs, Legacy_Player)
+    table.insert(bodyDisplayImgs, {Default_Player_Blu, "Default"})
+    table.insert(bodyDisplayImgs, {Default_Player_Red, "Default"})
+    table.insert(bodyDisplayImgs, {Default_Player_Porple, "Default"})
+    table.insert(bodyDisplayImgs, {Default_Player_Gween, "Default"})
+    table.insert(bodyDisplayImgs, {Default_Player_Wewwow, "Default"})
+    table.insert(bodyDisplayImgs, {Legacy_Player, "Legacy"})
     -- Change the image filter of the player textures to allow for resizing without blurring
     for i in ipairs(bodyDisplayImgs) do
-        bodyDisplayImgs[i]:setFilter("nearest", "nearest")
+        bodyDisplayImgs[i][1]:setFilter("nearest", "nearest")
     end
     -- Add hats to their respective list and set their scaling filter
     table.insert(hatDisplayImgs, Default_Hat_TopHat)
@@ -78,7 +92,7 @@ function cosmetic_menu.load()
     titleText = Text.new(10, 0, "Cosmetic Menu", largeTitleFont, true)
     titleText.y = titleText.y + titleText.height
     titleText.x = titleText.x + (titleText.width / 2)
-    packText = Text.new(screenWidth / 2, (screenHeight / 8) * 5, "Default Pack", titleFont)
+    packText = Text.new(screenWidth / 2, (screenHeight / 8) * 5, "Default Pack", titleFont, true)
     bodyDisplay = Display.new(screenWidth / 2, screenHeight / 2, Default_Player_Blu, bodyDisplayImgs, 2)
     -- Only make the selecter arrows when they don't exist.
     if not leftBodySelecterArrow then
@@ -93,7 +107,12 @@ function cosmetic_menu.load()
     else
         bodyDisplay:changeHatFromList(hatDisplayIndex, hatDisplayImgs)
     end
+
+    cosmetic_menu.addResourcePacks(assetTable)
 end
+
+
+
 
 function cosmetic_menu.update(dt)
     cosmetic_menu.bodyArrowUpdate(dt)
@@ -120,14 +139,10 @@ function cosmetic_menu.bodyArrowUpdate(dt)
         end
     end
 
-    if bodyDisplayIndex ==  6 then
-        bodyDisplay:changeImgFromList(bodyDisplayIndex, "legacy")
-        packText:changeText("Legacy Pack")
-    else
-        bodyDisplay:changeImgFromList(bodyDisplayIndex, "default")
-        packText:changeText("Default Pack")
-    end
-    return bodyDisplayImgs[bodyDisplayIndex]
+    
+    bodyDisplay:changeImgFromList(bodyDisplayIndex)
+    packText:changeText(bodyDisplay:getImagePackType())
+    return bodyDisplayImgs[bodyDisplayIndex][1]
 end
 
 function cosmetic_menu.hatArrowUpdate(dt)

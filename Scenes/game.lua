@@ -78,8 +78,6 @@ function game.load(playerBodySprite, hatSprite)
     -- Tile map stuff:
     tileAtlas = TileAtlas.new(love.graphics.newImage("Assets/Textures/Tilemaps/Default Tilemap/kitchen_v1.png"), 4) -- Assets/Textures/Tilemaps/test/kitchen_v1.png has 18x18 (324) tiles 
     tileAtlas:loadFromTileset()
-    -- Utils Testing:
-    Utils.init()
 end
 
 function game.update(dt)

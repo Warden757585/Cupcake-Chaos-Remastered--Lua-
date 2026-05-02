@@ -27,12 +27,12 @@ function Display:changeImg(newImg, imagePackType)
     self.imagePackType = imagePackType or "default"
 end
 
-function Display:changeImgFromList(index, imagePacktype, imgList)
-    self.imagePackType = imagePacktype or "default"
+function Display:changeImgFromList(index, imgList)
+    self.imagePackType = self.imgs[index][2]
     if self.imgs ~= {} then
-        self.img = self.imgs[index]
+        self.img = self.imgs[index][1]
     else
-        self.img = imgList[index]
+        self.img = imgList[index][1]
     end
 end
 

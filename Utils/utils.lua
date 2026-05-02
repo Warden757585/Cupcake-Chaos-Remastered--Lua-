@@ -1,7 +1,10 @@
 local utils = {}
+local doResourcePacks
+
 
 function utils.init()
     print("Utils Starting - " .. os.date("%Y-%m-%d %H:%M:%S"))
+    -- Score Checks
     print("Checking score files...")
     if love.filesystem.getInfo("scores.txt") then
         print("Score file found.")
@@ -10,21 +13,85 @@ function utils.init()
         love.filesystem.write("scores.txt", "")
         print("Score file created.")
     end
+    -- Resource Pack Loading:
+    if love.filesystem.getInfo("packs.CupcakeChaosFile") then
+        print("Resource Packs found")
+        local packs = love.filesystem.read("packs.CupcakeChaosFile")
+        if packs ~= "" then
+            doResourcePacks = true
+        end
+    else
+        print("No resource packs found!")
+        doResourcePacks = false
+    end
 end
 
---[[ function utils.test()
-    print("This is a test function in utils")
-    local scores = {11, 23, 27, 31, 19}
-    table.sort(scores, function(a, b)
-    return a > b
-    end)
-    for k, v in pairs(scores) do
-        print("Item: " .. k .. " Value: " .. v)
-        love.filesystem.append("scores.txt", "Item: " .. k .. " Value: " .. v .. "\n")
+function utils.loadResourcePacks()
+    local assetTable = {}
+    local lineCount = 1
+    if doResourcePacks then
+        for line in love.filesystem.lines("packs.CupcakeChaosFile") do
+            if lineCount == 1 then
+                if line:match("Packs:") then
+                    print("Pack file valid")
+                else
+                    --print("Invalid pack file: stopping resource loading!")
+                    return
+                end
+                lineCount = lineCount + 1
+            else
+                -- This pattern looks for: [Everything] then " - Score: " then [The Number]
+                local packName, packDirectory = line:match("%-%s*([^,]+),%s*(.+)")
+                
+                --print("Sucsessfully loaded: " .. packName .. ", " .. packDirectory)
+                local packContents = love.filesystem.getDirectoryItems(packDirectory)
+                for i, filename in ipairs(packContents) do
+                    --print(filename .. " in " .. packDirectory)
+                    local subdirectory = packDirectory .. "/" .. filename
+                    if love.filesystem.getInfo(subdirectory).type == "directory" then
+                        if filename == "Textures" then
+                            local textureContents = love.filesystem.getDirectoryItems(subdirectory)
+                            for i, subfilename in ipairs(textureContents) do
+                                --print(subfilename .. " in " .. subdirectory)
+                                local bottomDirectory = subdirectory .. "/" .. subfilename
+                                if subfilename == "Player" then
+                                    local playerTextureContents = love.filesystem.getDirectoryItems(bottomDirectory)
+                                    for i, playerTexture in ipairs(playerTextureContents) do
+                                        print(playerTexture .. " in " .. bottomDirectory)
+                                        if playerTexture:lower():match("%.png$") then
+                                            --print("A png was found... adding to the asset table")
+                                            -- The next line adds the file path, type and pack name of the assets found to the asset table
+                                            -- The asset table is later returned for game.lua and cosmetic_menu.lua to read and use
+                                            table.insert(assetTable, {bottomDirectory .. "/" .. playerTexture, packName, "playerTexture"})
+                                        end
+                                    end
+                                else
+                                    --print("Invalid directory found: continuing...")
+                                end
+                            end
+                        else
+                            --print("File in incorrect position / not nessescary: skipping and continuing resource loading...")
+                        end
+                    end
+                end
+                lineCount = lineCount + 1
+            end
+        end
     end
-end ]]
-
-
+    for i, asset in ipairs(assetTable) do
+        -- Unpack the 3 properties from the sub-table
+        local path = asset[1]
+        local packName = asset[2]
+        local assetType = asset[3]
+        print("--------------------")
+        print(string.format("Item #%d:", i))
+        print("  File Path: " .. path)
+        print("  From Pack: " .. packName)
+        print("  Type:  " .. assetType)
+        print("--------------------")
+    end
+    return assetTable
+end
 
 function utils.loadScores()
     if love.filesystem.getInfo("scores.txt") then
