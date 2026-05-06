@@ -16,6 +16,10 @@ function Player.new(img, seed, scaling, rotation)
     instance.x_velocity = 0
     instance.y_velocity = 0
     instance.type = "Player"
+    instance.upKeys = {'w', 'up'}
+    instance.downKeys = {'s', 'down'}
+    instance.leftKeys = {'a', 'left'}
+    instance.rightKeys = {'d', 'right'}
     return instance
 end
 
@@ -37,19 +41,19 @@ function Player:playerMovement()
         self.speed = 1 + (self.score * 0.025)
     end
     -- When keys pressed update the velocity
-    if love.keyboard.isDown('w', 'up') then
+    if love.keyboard.isDown(self.upKeys[1], self.upKeys[2]) then
         self.y_velocity = self.y_velocity - (1 * (self.speed / 1.5))
     end
 
-    if love.keyboard.isDown('s', 'down') then
+    if love.keyboard.isDown(self.downKeys[1], self.downKeys[2]) then
         self.y_velocity = self.y_velocity + (1 * (self.speed / 1.5))
     end
 
-    if love.keyboard.isDown('a', 'left') then
+    if love.keyboard.isDown(self.leftKeys[1], self.leftKeys[2]) then
         self.x_velocity = self.x_velocity - (1 * (self.speed / 1.5))
     end
 
-    if love.keyboard.isDown('d', 'right') then
+    if love.keyboard.isDown(self.rightKeys[1], self.rightKeys[2]) then
         self.x_velocity = self.x_velocity + (1 * (self.speed / 1.5))
     end
 
@@ -112,6 +116,16 @@ function Player:renderHatAccesory(hatImg)
         local hatX = self.x + (self.width - hatWidth) / 2
         local hatY = self.y - hatHeight / 2
         love.graphics.draw(hatImg, hatX, hatY, self.rotation, hatScale, hatScale)
+    end
+end
+
+function Player:rotateInputs(quaterCircles)
+    for i = 1, quaterCircles do
+        local startUpKeys = self.upKeys
+        self.upKeys = self.rightKeys
+        self.rightKeys = self.downKeys
+        self.downKeys = self.leftKeys
+        self.leftKeys = startUpKeys
     end
 end
 

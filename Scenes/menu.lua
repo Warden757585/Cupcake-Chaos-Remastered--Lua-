@@ -50,7 +50,7 @@ function menu.load()
         local scoreText = Text.new(10, 10 + (i * 40), score.time .. " - Score: " .. score.score, largeDefaultFont)
         table.insert(scoreTexts, scoreText)
     end
-    utils.loadResourceScripts()
+    
 end
 
 function menu.update(dt)

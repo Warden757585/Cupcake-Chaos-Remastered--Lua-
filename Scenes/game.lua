@@ -3,6 +3,7 @@ local Player = require("Player")
 local Timer = require("Components.Interactive.timer")
 local TileAtlas = require("Tilemap.tile_atlas")
 local Utils = require("Utils.utils")
+local api = require("Utils.api")
 
 local game = {}
 
@@ -30,8 +31,11 @@ local doKeyDebug = false
 -- Image Variable(s):
 local cupcakeImg
 local playerImg
+-- Modding:
+local mods
+local wrappedPlayer
 
-function game.load(playerBodySprite, hatSprite)
+function game.load(playerBodySprite, hatSprite, resourceScripts)
     seed = os.time() + love.timer.getTime() * 1000
     love.math.setRandomSeed(os.time())
     -- Set the current font to mainFont
@@ -78,6 +82,15 @@ function game.load(playerBodySprite, hatSprite)
     -- Tile map stuff:
     tileAtlas = TileAtlas.new(love.graphics.newImage("Assets/Textures/Tilemaps/Default Tilemap/kitchen_v1.png"), 4) -- Assets/Textures/Tilemaps/test/kitchen_v1.png has 18x18 (324) tiles 
     tileAtlas:loadFromTileset()
+    -- Player Modding
+    mods = resourceScripts
+    wrappedPlayer = api.wrapPlayer(myPlayer)
+
+    for _, mod in ipairs(mods) do
+        if mod.init then
+            mod.init(wrappedPlayer)
+        end
+    end
 end
 
 function game.update(dt)

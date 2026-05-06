@@ -9,6 +9,7 @@ local playerBodySprite
 local playerHatSprite
 
 local assetTable
+local scriptTable
 
 function love.load()
     playerBodySprite = love.graphics.newImage("Assets/Textures/Default Textures/Player/blu guy.png")
@@ -18,10 +19,11 @@ function love.load()
     -- Utility Manager init:
     utils.init()
     assetTable = utils.loadResourcePacks()
+    scriptTable = utils.loadResourceScripts()
     -- Change the compression of images:
     love.graphics.setDefaultFilter("nearest", "nearest")
     if scene == "game" then
-        game.load(playerBodySprite, playerHatSprite)
+        game.load(playerBodySprite, playerHatSprite, scriptTable)
     end
     if scene == "menu" then
         menu.load()
@@ -56,7 +58,7 @@ function love.update(dt)
             scene = nextScene
         end
         if nextScene == "game" then
-            game.load(playerBodySprite, playerHatSprite)
+            game.load(playerBodySprite, playerHatSprite, scriptTable)
             scene = nextScene
         end
         if nextScene == "cosmetic_menu" then
