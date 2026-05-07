@@ -39,7 +39,7 @@ function cosmetic_menu.addResourcePacks(assetTable)
         local packName = asset[2]
         local assetType = asset[3]
         if assetType == "playerTexture" then
-            table.insert(bodyDisplayImgs, {love.graphics.newImage(path), packName})
+            table.insert(bodyDisplayImgs, {love.graphics.newImage(path), packName, path})
             --print("Sucsessfully added " .. path .. " from " .. packName .. " into the game!")
         end
     end
@@ -59,23 +59,23 @@ function cosmetic_menu.load(assetTable)
     local Right_Arrow_Button = love.graphics.newImage("Assets/Textures/Menu Textures/Buttons/64x64 Right Arrow Button.png")
     -- Load display image(s)
     -- Display IMG naming: Pack (e.g. Legacy), Type (Player, Hat, Cupcake, etc.), Number/Colour (if there are multiple of the same type in the pack)
-    local Legacy_Player = love.graphics.newImage("Assets/Textures/Legacy Textures/Blue Square Guy.png")
-    local Default_Player_Blu = love.graphics.newImage("Assets/Textures/Default Textures/Player/blu guy.png")
-    local Default_Player_Red = love.graphics.newImage("Assets/Textures/Default Textures/Player/red guy.png")
-    local Default_Player_Porple = love.graphics.newImage("Assets/Textures/Default Textures/Player/porple guy.png")
-    local Default_Player_Gween = love.graphics.newImage("Assets/Textures/Default Textures/Player/gween guy.png")
-    local Default_Player_Wewwow = love.graphics.newImage("Assets/Textures/Default Textures/Player/wewwow guy.png")
+    local Legacy_Player = {love.graphics.newImage("Assets/Textures/Legacy Textures/Blue Square Guy.png"), "Assets/Textures/Legacy Textures/Blue Square Guy.png"}
+    local Default_Player_Blu = {love.graphics.newImage("Assets/Textures/Default Textures/Player/blu guy.png"), "Assets/Textures/Default Textures/Player/blu guy.png"}
+    local Default_Player_Red = {love.graphics.newImage("Assets/Textures/Default Textures/Player/red guy.png"), "Assets/Textures/Default Textures/Player/red guy.png"}
+    local Default_Player_Porple = {love.graphics.newImage("Assets/Textures/Default Textures/Player/porple guy.png"), "Assets/Textures/Default Textures/Player/porple guy.png"}
+    local Default_Player_Gween = {love.graphics.newImage("Assets/Textures/Default Textures/Player/gween guy.png"), "Assets/Textures/Default Textures/Player/gween guy.png"}
+    local Default_Player_Wewwow = {love.graphics.newImage("Assets/Textures/Default Textures/Player/wewwow guy.png"), "Assets/Textures/Default Textures/Player/wewwow guy.png"}
     local Default_Hat_TopHat = love.graphics.newImage("Assets/Textures/Default Textures/Player/Accesories/Hats/top hat.png")
     -- Clear the image tables if they have data
     bodyDisplayImgs = {}
     hatDisplayImgs = {}
     -- Add all the body images to the list
-    table.insert(bodyDisplayImgs, {Default_Player_Blu, "Default"})
-    table.insert(bodyDisplayImgs, {Default_Player_Red, "Default"})
-    table.insert(bodyDisplayImgs, {Default_Player_Porple, "Default"})
-    table.insert(bodyDisplayImgs, {Default_Player_Gween, "Default"})
-    table.insert(bodyDisplayImgs, {Default_Player_Wewwow, "Default"})
-    table.insert(bodyDisplayImgs, {Legacy_Player, "Legacy"})
+    table.insert(bodyDisplayImgs, {Default_Player_Blu[1], "Default", Default_Player_Blu[2]})
+    table.insert(bodyDisplayImgs, {Default_Player_Red[1], "Default", Default_Player_Red[2]})
+    table.insert(bodyDisplayImgs, {Default_Player_Porple[1], "Default", Default_Player_Porple[2]})
+    table.insert(bodyDisplayImgs, {Default_Player_Gween[1], "Default", Default_Player_Gween[2]})
+    table.insert(bodyDisplayImgs, {Default_Player_Wewwow[1], "Default", Default_Player_Wewwow[2]})
+    table.insert(bodyDisplayImgs, {Legacy_Player[1], "Legacy", Legacy_Player[2]})
     -- Change the image filter of the player textures to allow for resizing without blurring
     for i in ipairs(bodyDisplayImgs) do
         bodyDisplayImgs[i][1]:setFilter("nearest", "nearest")
@@ -142,7 +142,7 @@ function cosmetic_menu.bodyArrowUpdate(dt)
     
     bodyDisplay:changeImgFromList(bodyDisplayIndex)
     packText:changeText(bodyDisplay:getImagePackType())
-    return bodyDisplayImgs[bodyDisplayIndex][1]
+    return bodyDisplayImgs[bodyDisplayIndex][1], bodyDisplayImgs[bodyDisplayIndex][2], bodyDisplayImgs[bodyDisplayIndex][3]
 end
 
 function cosmetic_menu.hatArrowUpdate(dt)

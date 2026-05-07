@@ -1,7 +1,7 @@
 local Player = {}
 Player.__index = Player
 
-function Player.new(img, seed, scaling, rotation)
+function Player.new(img, seed, scaling, rotation, imgPath, packType)
     local instance = setmetatable({}, Player)
     instance.img = img
     instance.seed = seed
@@ -16,6 +16,8 @@ function Player.new(img, seed, scaling, rotation)
     instance.x_velocity = 0
     instance.y_velocity = 0
     instance.type = "Player"
+    instance.imgFilename = imgPath:lower():match("%/(.-)%.png")
+    instance.packType = packType
     instance.upKeys = {'w', 'up'}
     instance.downKeys = {'s', 'down'}
     instance.leftKeys = {'a', 'left'}

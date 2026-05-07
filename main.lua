@@ -6,10 +6,16 @@ local cosmetic_menu = require("Scenes.cosmetic_menu")
 local scene = "menu"
 local nextScene = scene
 local playerBodySprite
+local playerTexturePack
+local playerTexturePath
 local playerHatSprite
 
 local assetTable
 local scriptTable
+
+
+-- Change the compression of images:
+love.graphics.setDefaultFilter("nearest", "nearest")
 
 function love.load()
     playerBodySprite = love.graphics.newImage("Assets/Textures/Default Textures/Player/blu guy.png")
@@ -20,8 +26,6 @@ function love.load()
     utils.init()
     assetTable = utils.loadResourcePacks()
     scriptTable = utils.loadResourceScripts()
-    -- Change the compression of images:
-    love.graphics.setDefaultFilter("nearest", "nearest")
     if scene == "game" then
         game.load(playerBodySprite, playerHatSprite, scriptTable)
     end
@@ -30,7 +34,6 @@ function love.load()
     end
     if scene == "cosmetic_menu" then
         cosmetic_menu.load(assetTable)
-        --cosmetic_menu.addResourcePacks(assetTable)
     end
 end
 
@@ -45,7 +48,8 @@ function love.update(dt)
         end
         if scene == "cosmetic_menu" then
             nextScene = cosmetic_menu.update(dt)
-            playerBodySprite = cosmetic_menu.bodyArrowUpdate(dt)
+            playerBodySprite, playerTexturePack, playerTexturePath = cosmetic_menu.bodyArrowUpdate(dt)
+            -- TODO: Input the playerTexturePack and playerTexturePath into game and the player, then add methods to get those parameters for modding (Incluide them into the API)
             playerHatSprite = cosmetic_menu.hatArrowUpdate(dt)
         end
     end
