@@ -85,6 +85,7 @@ end
 function menu.keypressed(key)
     if key == "escape" then
 		love.window.close()
+        love.event.quit()
 	end
     if key == "f3" then
         doDebug = not doDebug

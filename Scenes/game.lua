@@ -111,6 +111,12 @@ function game.update(dt)
         myTimer:stopCounting()
         game.unload()
     end
+
+    for _, mod in ipairs(mods) do
+        if mod.update then
+            mod.update(wrappedPlayer)
+        end
+    end
 end
 
 function game.keypressed(key)
@@ -168,6 +174,12 @@ function game.draw()
             love.graphics.setFont(titleFont)
         end
         love.graphics.print("!GAME OVER! Final Score: " ..myPlayer.score , (love.graphics.getWidth() / 2) - (titleFont:getWidth("!GAME OVER! Final Score: " ..myPlayer.score) / 2), 100)
+    end
+
+    for _, mod in ipairs(mods) do
+        if mod.draw then
+            mod.draw(wrappedPlayer)
+        end
     end
 end
 
