@@ -2,20 +2,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Current Lua File",
-            "type": "lua",
+            "name": "Run Love2D",
+            "type": "cppdbg", 
             "request": "launch",
-            "program": "${file}",
-            "stopOnEntry": false,
-            "arg": []
-        },
-        {
-            "name": "Run main.lua",
-            "type": "lua",
-            "request": "launch",
-            "program": "${workspaceFolder}/main.lua",
-            "stopOnEntry": false,
-            "arg": []
+            "program": "C:/love2d/love.exe",
+            "args": ["."],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "clear-terminal"
         }
     ]
 }
