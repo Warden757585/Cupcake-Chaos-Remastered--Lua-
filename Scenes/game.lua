@@ -114,7 +114,7 @@ function game.update(dt)
 
     for _, mod in ipairs(mods) do
         if mod.update then
-            mod.update(wrappedPlayer)
+            mod.update(wrappedPlayer, dt)
         end
     end
 end
@@ -134,6 +134,12 @@ function game.keypressed(key)
     end
     if(doKeyDebug) then
         print(key)        
+    end
+
+    for _, mod in ipairs(mods) do
+        if mod.keypressed then
+            mod.keypressed(wrappedPlayer, key)
+        end
     end
 end
 
