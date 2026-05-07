@@ -92,8 +92,8 @@ function cosmetic_menu.load(assetTable)
     titleText = Text.new(10, 0, "Cosmetic Menu", largeTitleFont, true)
     titleText.y = titleText.y + titleText.height
     titleText.x = titleText.x + (titleText.width / 2)
-    packText = Text.new(screenWidth / 2, (screenHeight / 8) * 5, "Default Pack", titleFont, true)
-    bodyDisplay = Display.new(screenWidth / 2, screenHeight / 2, Default_Player_Blu, bodyDisplayImgs, 2)
+    packText = Text.new(screenWidth / 2, (screenHeight / 8) * 5, "Default", titleFont, true)
+    bodyDisplay = Display.new(screenWidth / 2, screenHeight / 2, Default_Player_Blu[1], bodyDisplayImgs, 2)
     -- Only make the selecter arrows when they don't exist.
     if not leftBodySelecterArrow then
         leftBodySelecterArrow = Button.new((screenWidth / 2) - (bodyDisplay.width / 2) - 128, screenHeight / 2, Left_Arrow_Button, nil, nil)

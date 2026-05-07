@@ -19,6 +19,8 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 
 function love.load()
     playerBodySprite = love.graphics.newImage("Assets/Textures/Default Textures/Player/blu guy.png")
+    playerTexturePath = "Assets/Textures/Default Textures/Player/blu guy.png"
+    playerTexturePack = "Default"
     playerHatSprite = love.graphics.newImage("Assets/Textures/Default Textures/Player/Accesories/Hats/top hat.png")
     -- Set the screen to fullscreen 
     love.window.setFullscreen(true)
@@ -27,7 +29,7 @@ function love.load()
     assetTable = utils.loadResourcePacks()
     scriptTable = utils.loadResourceScripts()
     if scene == "game" then
-        game.load(playerBodySprite, playerHatSprite, scriptTable)
+        game.load(playerBodySprite, playerHatSprite, scriptTable, playerTexturePack, playerTexturePath)
     end
     if scene == "menu" then
         menu.load()
@@ -49,7 +51,6 @@ function love.update(dt)
         if scene == "cosmetic_menu" then
             nextScene = cosmetic_menu.update(dt)
             playerBodySprite, playerTexturePack, playerTexturePath = cosmetic_menu.bodyArrowUpdate(dt)
-            -- TODO: Input the playerTexturePack and playerTexturePath into game and the player, then add methods to get those parameters for modding (Incluide them into the API)
             playerHatSprite = cosmetic_menu.hatArrowUpdate(dt)
         end
     end
@@ -62,7 +63,7 @@ function love.update(dt)
             scene = nextScene
         end
         if nextScene == "game" then
-            game.load(playerBodySprite, playerHatSprite, scriptTable)
+            game.load(playerBodySprite, playerHatSprite, scriptTable, playerTexturePack, playerTexturePath)
             scene = nextScene
         end
         if nextScene == "cosmetic_menu" then

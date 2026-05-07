@@ -35,7 +35,7 @@ local playerImg
 local mods
 local wrappedPlayer
 
-function game.load(playerBodySprite, hatSprite, resourceScripts)
+function game.load(playerBodySprite, hatSprite, resourceScripts, playerTexturePack, playerTexturePath)
     seed = os.time() + love.timer.getTime() * 1000
     love.math.setRandomSeed(os.time())
     -- Set the current font to mainFont
@@ -72,7 +72,7 @@ function game.load(playerBodySprite, hatSprite, resourceScripts)
     end
     myTimer:startCounting()
     -- Declare our player
-    myPlayer = Player.new(playerImg, seed)
+    myPlayer = Player.new(playerImg, seed, 1, 0, playerTexturePack, playerTexturePath)
     myPlayer:changePosition() -- Change the player's position to a random location at the start of the game
     -- Assign each cupcake its own individual seed so that they do not re-position to the same coordinates
     -- Changing the game's seed still affects each cupcake

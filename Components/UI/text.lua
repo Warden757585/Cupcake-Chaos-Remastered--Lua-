@@ -24,9 +24,11 @@ function Text:draw()
 end
 
 function Text:changeText(newText)
+    local isChanged = false
     self.text = newText
     self.width = self.font:getWidth(self.text)
     self.height = self.font:getHeight()
+    
 end
 
 return Text

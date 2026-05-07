@@ -1,7 +1,7 @@
 local Player = {}
 Player.__index = Player
 
-function Player.new(img, seed, scaling, rotation, imgPath, packType)
+function Player.new(img, seed, scaling, rotation, packType, imgPath)
     local instance = setmetatable({}, Player)
     instance.img = img
     instance.seed = seed
@@ -16,7 +16,7 @@ function Player.new(img, seed, scaling, rotation, imgPath, packType)
     instance.x_velocity = 0
     instance.y_velocity = 0
     instance.type = "Player"
-    instance.imgFilename = imgPath:lower():match("%/(.-)%.png")
+    instance.imgFilename = imgPath:lower():match("([^/\\]+)%.png$")
     instance.packType = packType
     instance.upKeys = {'w', 'up'}
     instance.downKeys = {'s', 'down'}
@@ -121,6 +121,8 @@ function Player:renderHatAccesory(hatImg)
     end
 end
 
+-------------------------------- MODDING FUNCTIONS --------------------------------
+
 function Player:rotateInputs(quaterCircles)
     for i = 1, quaterCircles do
         local startUpKeys = self.upKeys
@@ -129,6 +131,10 @@ function Player:rotateInputs(quaterCircles)
         self.downKeys = self.leftKeys
         self.leftKeys = startUpKeys
     end
+end
+
+function Player:getTextureInfo()
+    return self.imgFilename, self.packType
 end
 
 return Player
