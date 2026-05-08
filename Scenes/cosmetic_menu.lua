@@ -42,6 +42,9 @@ function cosmetic_menu.addResourcePacks(assetTable)
             table.insert(bodyDisplayImgs, {love.graphics.newImage(path), packName, path})
             --print("Sucsessfully added " .. path .. " from " .. packName .. " into the game!")
         end
+        if assetType == "hatTexture" then
+            table.insert(hatDisplayImgs, love.graphics.newImage(path))
+        end
     end
     print("Resource Pack Assets sucsessfully loaded")
 end

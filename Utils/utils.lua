@@ -65,6 +65,17 @@ function utils.loadResourcePacks()
                                             table.insert(assetTable, {bottomDirectory .. "/" .. playerTexture, packName, "playerTexture"})
                                         end
                                     end
+                                elseif subfilename == "PlayerHat" then
+                                    local hatTextureContents = love.filesystem.getDirectoryItems(bottomDirectory)
+                                    for i, hatTexture in ipairs(hatTextureContents) do
+                                        print(hatTexture .. " in " .. bottomDirectory)
+                                        if hatTexture:lower():match("%.png$") then
+                                            --print("A png was found... adding to the asset table")
+                                            -- The next line adds the file path, type and pack name of the assets found to the asset table
+                                            -- The asset table is later returned for game.lua and cosmetic_menu.lua to read and use
+                                            table.insert(assetTable, {bottomDirectory .. "/" .. hatTexture, packName, "hatTexture"})
+                                        end
+                                    end
                                 else
                                     --print("Invalid directory found: continuing...")
                                 end
