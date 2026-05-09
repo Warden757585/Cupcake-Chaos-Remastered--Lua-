@@ -35,25 +35,25 @@ local playerImg
 local mods
 local wrappedPlayer
 
-function game.load(playerBodySprite, hatSprite, resourceScripts, playerTexturePack, playerTexturePath)
+function game.load(playerTextureData, resourceScripts)
     seed = os.time() + love.timer.getTime() * 1000
     love.math.setRandomSeed(os.time())
     -- Set the current font to mainFont
     love.graphics.setFont(mainFont)
     -- Load all images
     cupcakeImg = love.graphics.newImage("Assets/Textures/Default Textures/Cupcake/cupcwake.png")
-    if type(playerBodySprite) == "string" then
-        playerImg = love.graphics.newImage(playerBodySprite)
+    if type(playerTextureData[1]) == "string" then
+        playerImg = love.graphics.newImage(playerTextureData[1])
     else
-        playerImg = playerBodySprite
+        playerImg = playerTextureData[1]
     end
     -- Store the hat sprite
-    if type(hatSprite) == "string" and hatSprite ~= "no hat" then
-        playerHatSprite = love.graphics.newImage(hatSprite)
-    elseif hatSprite == "no hat" then
+    if type(playerTextureData[4]) == "string" and playerTextureData[4] ~= "no hat" then
+        playerHatSprite = love.graphics.newImage(playerTextureData[4])
+    elseif playerTextureData[4] == "no hat" then
         playerHatSprite = nil
     else
-        playerHatSprite = hatSprite
+        playerHatSprite = playerTextureData[4]
     end
     table.insert(cupcakeIndex, Cupcake.new(0, 0, cupcakeImg, seed, scoreSound)) -- Cupcake 1
     table.insert(cupcakeIndex, Cupcake.new(0, 0, cupcakeImg, seed, scoreSound)) -- Cupcake 2
@@ -72,7 +72,7 @@ function game.load(playerBodySprite, hatSprite, resourceScripts, playerTexturePa
     end
     myTimer:startCounting()
     -- Declare our player
-    myPlayer = Player.new(playerImg, seed, 1, 0, playerTexturePack, playerTexturePath)
+    myPlayer = Player.new(playerImg, seed, 1, 0, playerTextureData[3], playerTextureData[2])
     myPlayer:changePosition() -- Change the player's position to a random location at the start of the game
     -- Assign each cupcake its own individual seed so that they do not re-position to the same coordinates
     -- Changing the game's seed still affects each cupcake

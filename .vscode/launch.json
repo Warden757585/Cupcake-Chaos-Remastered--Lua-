@@ -11,8 +11,7 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "gdb",
-            "preLaunchTask": "clear-terminal"
+            "MIMode": "gdb"
         }
     ]
 }

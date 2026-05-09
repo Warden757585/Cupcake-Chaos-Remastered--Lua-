@@ -5,23 +5,20 @@ local cosmetic_menu = require("Scenes.cosmetic_menu")
 
 local scene = "menu"
 local nextScene = scene
-local playerBodySprite
-local playerTexturePack
-local playerTexturePath
-local playerHatSprite
 
 local assetTable
 local scriptTable
 
+local playerTextureData
 
 -- Change the compression of images:
 love.graphics.setDefaultFilter("nearest", "nearest")
 
 function love.load()
-    playerBodySprite = love.graphics.newImage("Assets/Textures/Default Textures/Player/blu guy.png")
-    playerTexturePath = "Assets/Textures/Default Textures/Player/blu guy.png"
-    playerTexturePack = "Default"
-    playerHatSprite = love.graphics.newImage("Assets/Textures/Default Textures/Player/Accesories/Hats/top hat.png")
+    playerTextureData = {love.graphics.newImage("Assets/Textures/Default Textures/Player/blu guy.png"),
+                        "Assets/Textures/Default Textures/Player/blu guy.png",
+                        "Default",
+                        love.graphics.newImage("Assets/Textures/Default Textures/Player/Accesories/Hats/top hat.png")}
     -- Set the screen to fullscreen 
     love.window.setFullscreen(true)
     -- Utility Manager init:
@@ -29,7 +26,7 @@ function love.load()
     assetTable = utils.loadResourcePacks()
     scriptTable = utils.loadResourceScripts()
     if scene == "game" then
-        game.load(playerBodySprite, playerHatSprite, scriptTable, playerTexturePack, playerTexturePath)
+        game.load(playerTextureData, scriptTable)
     end
     if scene == "menu" then
         menu.load()
@@ -50,8 +47,8 @@ function love.update(dt)
         end
         if scene == "cosmetic_menu" then
             nextScene = cosmetic_menu.update(dt)
-            playerBodySprite, playerTexturePack, playerTexturePath = cosmetic_menu.bodyArrowUpdate(dt)
-            playerHatSprite = cosmetic_menu.hatArrowUpdate(dt)
+            playerTextureData[1], playerTextureData[3], playerTextureData[2] = cosmetic_menu.bodyArrowUpdate(dt)
+            playerTextureData[4] = cosmetic_menu.hatArrowUpdate(dt)
         end
     end
 
@@ -63,7 +60,7 @@ function love.update(dt)
             scene = nextScene
         end
         if nextScene == "game" then
-            game.load(playerBodySprite, playerHatSprite, scriptTable, playerTexturePack, playerTexturePath)
+            game.load(playerTextureData, scriptTable)
             scene = nextScene
         end
         if nextScene == "cosmetic_menu" then
